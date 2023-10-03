@@ -1,6 +1,18 @@
 //VARIABLES
+var phase;
 
 var character;
+
+var wager = .1;
+var betMulti = 1;
+var multiMax = 9;
+
+var odds = .5;
+var riskMulti = 0;
+
+function calculatePrize() {
+    var prize = wager * (odds / .5);
+}
 
 //FOUNDATIONAL
 function create(elem, id, clast, onclick, bod){
@@ -40,7 +52,23 @@ function hide(id) {
 }
 
 //FLOW
+function next(){
+    if(phase = "char"){
+        stageMenu();
+    }
+}
+
+function back(){
+    if(phase = "char"){
+        mainMenu();
+    }
+    if(phase = "stage"){
+        charMenu();
+    }
+}
+
 function boot(){
+    phase = "boot";
     frame(
         "boot","","logo","",
         `<img src="public/bwlogosmol.png" alt="miladystation">`
@@ -49,6 +77,7 @@ function boot(){
 }
 
 function start(){
+    phase = "start"
     frame("","","","container",
         create(
             "button","","float centered-button","auth()","click-here"
@@ -57,6 +86,7 @@ function start(){
 }
 
 function auth(){
+    phase = "auth"
     frame("","","","container",
         create(
             "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet"
@@ -75,6 +105,7 @@ walletConnect = () => {
 }
 
 function mainMenu(){
+    phase = "main"
     frame("","inside","option","option",
         create("ul","","list","",
             create("li","","option","",
@@ -94,10 +125,10 @@ function mainMenu(){
 
 function soloFlow(){
     charMenu();
-
 }
 
 function charMenu(){
+    phase = "char"
     frame("","inside","","",  
         create("div","char-sel","float grid","",
             `${charList()}`
@@ -116,17 +147,35 @@ function charMenu(){
             +
             create("p","name","stat","","name: ")
         )
+        +
+        create("div","param","","",
+            create("div","","dial","",
+                create("p","odds","","","")
+                +
+                create("button","risk-less","ctrl","risk(0)","-")
+                +
+                create("button","risk-more","ctrl","risk(1)","+")
+            )
+            +
+            create("div","","dial","",
+                create("p","wager","","",``)
+                +
+                create("button","bet-less","ctrl","bet(0)","-")
+                +
+                create("button","bet-more","ctrl","bet(1)","+")
+            )
+        )
     )
-    //setInterval(dragWatch(),20);
+    get('bet-less').disabled = true;
+    checkChain("play");
 }
-
 
 function charList(){
     var chars = "";
     
-    for(i = 0; i < 12; i++){
-        chars += create("div",`char${i}`,"char","",
-            `<img src="public/char/${i}.png" alt="char${i}"/>`    
+    for(i = 1; i < 13; i++){
+        chars += create("div",`char${i}`,"char op","",
+            `<img src="public/char/${i}.png" alt="char${i}" class="pp"/>`    
         )
     }
     return chars
@@ -141,12 +190,110 @@ loadCard = async(id) => {
         character = character.substring(0,1);
     }
     character = parseInt(character);
-    console.log(character)
+    //console.log(character)
     //stats(id)
+    get('picked').children[0].style.classList = "card"
+    console.log(get('picked').children[0].style.classList)
+    stats();
+    banner();
+}
+
+function banner() {
+    if(get('banner')){
+        get('banner').remove();
+    }
+    
+    document.body.innerHTML += 
+    create("div","banner","ribbon","",
+        create("button","banner-min","tiny",`minimize('banner')`,"-")
+        +
+        create("h2","sum","","",`${getBet()} $DMT at ${getRisk()} odds for ${getPrize} $DMT`)
+        +
+        create("button","","","next()","READY")
+    );
+    slideIn('banner');
+}
+
+function getBet() {
+    return (wager*betMulti).toPrecision(2);
+}
+function getRisk() {
+    return odds-0.1*riskMulti.toPrecision(2);
+}
+function getPrize() {
+    return getBet() / getRisk();
+}
+
+function minimize(target) {
+    tar = get(target);
+    tar.style.top = "0px";
+    tar.style.height = "10%";
+    tar.innerHTML = create("button","banner-max","tiny","banner()","+");
+}
+
+bet = (w) => {
+    if(w > 0){
+        betMulti++
+    } else {
+        betMulti--
+    }
+    get("wager").innerHTML = "wager: " + `${getBet()} $DMT`;
+    if(betMulti > 1){
+        get('bet-less').disabled = false;
+    } else {
+        get('bet-less').disabled = true;
+    }
+
+    if(betMulti > multiMax){
+    get('bet-more').disabled = true;
+    }
+}
+
+risk = (w) => {
+    if(w > 0){
+        riskMulti++
+    } else {
+        riskMulti--
+    }
+    console.log(riskMulti)
+    get("odds").innerHTML = "odds: " + `${getRisk()}`;
+    if(riskMulti > -4){
+        get('risk-less').disabled = false;
+    } else {
+        get('risk-less').disabled = true;
+    }
+
+    if(riskMulti > 3){
+    get('risk-more').disabled = true;
+    } else {
+        get('risk-more').disabled = false;
+    }
 }
 
 stats = async (charSelId) => {
         await checkChain("stats");
+}
+
+function stageMenu() {
+    phase = "stage"
+    frame("","inside","","",  
+        create("div","stage-sel","float grid","",
+            `${stageList()}`
+        )
+        +
+        create("div","disc","draggable","","")     
+    )
+}
+
+function stageList() {
+    var stages = "";
+    
+    for(i = 1; i < 8; i++){
+        stages += create("div",`stage${i}`,"op","",
+            `<img src="public/stage/${i}.png" alt="stage${i}" class="stage" />`    
+        )
+    }
+    return stages
 }
 
 function gameList(){
@@ -161,7 +308,9 @@ function gameList(){
 }
 
 function newGameFlow(){
-
+    frame(
+        "choose the param of your game"
+    )
 }
 
 function joinFlow(){
@@ -191,6 +340,13 @@ checkChain = async(w) => {
             return ["355","3",""];
         },500)
     }
+    if(w == "play"){
+        setTimeout(function() {
+            console.log("chainchecked");
+            get("odds").innerHTML = "odds: " + ".5";
+            get("wager").innerHTML = "wager: " + `${wager*betMulti} $DMT`;
+        })
+    }
 }
 
 //drag drop
@@ -201,6 +357,9 @@ interact('.draggable').draggable({
     start (event) {
       //console.log(event.type, event.target)
       event.target.classList.add('dragging');
+      if(document.getElementById('banner')){
+        get('banner').remove();
+      }
     },
     move (event) {
       position.x += event.dx
@@ -211,12 +370,11 @@ interact('.draggable').draggable({
     },
     end (event) {
         event.target.classList.remove('dragging'); // Remove the class when the disc is dropped
-        stats();
     },
   }
 })
 
-interact('.char').dropzone({
+interact('.op').dropzone({
     accept: '.draggable', // Only accept elements with the 'draggable' class
     ondropactivate(event) {
       const dropzone = event.target;
@@ -226,23 +384,35 @@ interact('.char').dropzone({
       const dropzone = event.target;
       dropzone.classList.remove('drop-active');
     },
+    ondrop(event) {
+        const draggableElement = event.relatedTarget;
+        const dropzone = event.target;
+        if (draggableElement.classList.contains('draggable')) {
+          dropzone.classList.add('choice'); // Add a class to the tile when the disc is dropped
+        }
+        if (draggableElement.classList.contains('pp')) {
+            loadCard(dropzone.id);
+        }
+        if (draggableElement.classList.contains('stage')) {
+            console.log('stage picked');
+        }
+    },
     ondragenter(event) {
       const draggableElement = event.relatedTarget;
       const dropzone = event.target;
       if (draggableElement.classList.contains('draggable')) {
-        loadCard(dropzone.id);
-        dropzone.classList.add('char-pick'); // Add a class to the tile when the disc enters
+        //loadCard(dropzone.id);
+        dropzone.classList.add('choice'); // Add a class to the tile when the disc enters
       }
     },
     ondragleave(event) {
       const draggableElement = event.relatedTarget;
       const dropzone = event.target;
       if (draggableElement.classList.contains('draggable')) {
-        dropzone.classList.remove('char-pick'); // Remove the class from the tile when the disc leaves
-        
+        dropzone.classList.remove('choice'); // Remove the class from the tile when the disc leaves
       }
     },
-  });
+});
   
 
 //animation
@@ -273,12 +443,18 @@ function welcome() {
     
 }
 
-function glitchIn() {
-
+function slideIn(id) {
+    const element = document.getElementById(id);
+    // Use a setTimeout to apply the transformation after a brief delay
+    setTimeout(() => {
+      element.style.top = '50%'; /* Move to the vertical center of the screen */
+      element.style.transform = 'translate(-50%, -50%)'; /* Apply transformation */
+    }, 100);
 }
                     
 //full spread
 //boot();
 
 //mainMenu();
-soloFlow();
+//soloFlow();
+stageMenu();

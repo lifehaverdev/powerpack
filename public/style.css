@@ -65,13 +65,31 @@ html, body {
     padding: 0%;
     align-self: center;
     justify-self: center;
+    overflow:hidden;
 }
 
-.char-pick {
+.stage {
+    background-color: gray;
+    margin: 0%;
+    padding: 0%;
+    align-self: center;
+    justify-self: center;
+    overflow:hidden;
+}
+
+.choice {
     background-color: white;
 }
 
 #char-sel {
+    position:absolute;
+    width: 80vw;
+    height: 40vh;
+    top: 10vh;
+    background-color: aquamarine;
+}
+
+#stage-sel{
     position:absolute;
     width: 80vw;
     height: 40vh;
@@ -90,20 +108,28 @@ html, body {
         grid-template-columns: repeat(3, 1fr); /* 2 columns on mobile */
     }
     .draggable{
-        width: 25px;
-        height: 25px;
+        width: 50px;
+        height: 50px;
     }
     .dragging {
-        width: 30px;
-        height: 30px;
+        width: 60px;
+        height: 60px;
     }
     .char {
+        height: 60px;
+        width: 100px;
+    }
+    .stage {
         height: 60px;
         width: 100px;
     }
     .card {
         height: 300px;
         width: 200px;
+    }
+    .pp {
+        height: 100px;
+        width: 100px;
     }
 }
 
@@ -124,9 +150,17 @@ html, body {
         height: 100px;
         width: 200px;
     }
+    .stage {
+        height: 100px;
+        width: 200px;
+    }
     .card {
         height: 375px;
         width: 300px;
+    }
+    .pp {
+        height: 200px;
+        width: 200px;
     }
 }
 
@@ -160,12 +194,47 @@ html, body {
     height: 40%;
     width: 20%;
     
-    right: 12%;
+    right: 10%;
     position: absolute;
     bottom: 3%;
+}
+#param {
+    height: 20%;
+    width: 20%;
+    
+    right: 10%;
+    position: absolute;
+    bottom: 8%;
 }
 
 .stat {
     color: black;
     background-color: pink;
+}
+
+#wager {
+    color: white;
+}
+
+#odds {
+    color: white;
+}
+
+.ctrl {
+    color: white;
+    background-color: lightgreen;
+    height: 30px;
+    width: 30px;
+}
+
+#banner {
+    position: absolute;
+    top: -100px; /* Start offscreen above the screen */
+    left: 50%; /* Start at the horizontal center of the screen */
+    transform: translateX(-50%); /* Center the element horizontally */
+    transition: all 0.1s; /* Animation duration and easing */
+    width: 100vw;
+    height: 30vh;
+    background-color: pink;
+    display: flex;
 }
