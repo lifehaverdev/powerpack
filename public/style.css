@@ -61,6 +61,7 @@ html, body {
 
 .char {
     background-color: gray;
+    background-image: url("./electric-ball.gif");
     margin: 0%;
     padding: 0%;
     align-self: center;
@@ -177,8 +178,13 @@ html, body {
     background-color: gray;
 }
 
-.draggable {
+#chosen {
+    height: inherit;
+    align-self: center;
+    text-align: center;
+}
 
+.draggable {
     background-color: #29e;
     color: white;
     border-radius: 50px;
