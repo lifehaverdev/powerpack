@@ -30,19 +30,23 @@ checkChain = async(w) => {
     if(w == "play"){
         setTimeout(function() {
             console.log("chainchecked");
-            get("odds").innerHTML = "odds: " + ".5";
-            get("wager").innerHTML = "wager: " + `${wager*betMulti} $DMT`;
+            get("odds").innerHTML = "odds: " + `${getRisk()}`;
+            get("wager").innerHTML = "wager: " + `${getBet()} $DMT`;
         })
     }
     if(w=="fight"){
         setTimeout(function () {
             console.log("vrf");
+            if(vrf()){
+                win = 1;
+            } else {
+                win = -1;
+            }
             document.body.innerHTML += 
                 create("button","result","","result()","FIN");
             clearInterval(curInt);
             smash();
-            win = vrf();
-        },10000)
+        },15000)
     }
 }
 

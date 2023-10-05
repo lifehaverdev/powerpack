@@ -12,7 +12,7 @@ var multiMax = 9;
 var odds = .5;
 var riskMulti = 0;
 
-var win;
+var win = 0;
 
 var curInt;
 
@@ -53,18 +53,23 @@ function boot(){
 
 function start(){
     phase = "start"
-    frame("","","","container",
+    frame("","","intro","container",
+        create("h1","title","fight","","POWER PACKS ONCHAINED")
+        +
         create(
-            "button","","float centered-button","auth()","click-here"
+            "button","start","float centered-button","auth()","START"
         )
+        +
+        `<img src="./public/dogpile.png" id="dogpile" />`
     )
+    panUp(1.3)
 }
 
 function auth(){
     phase = "auth"
     frame("","","","container",
         create(
-            "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet"
+            "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet (jk)"
         )
     )
 }
@@ -148,8 +153,7 @@ function stageMenu() {
         )
         +
         create("div","disc","draggable","","")
-        +
-        create("button","select","","next()",) 
+        
     )
 }
 
@@ -171,7 +175,11 @@ function battle() {
             `${action()}`
         )
     )
-    battle1();
+    countDown()
+    setTimeout(()=>{
+        battle1();
+    },4000)
+    
     checkChain("fight");
 }
 
@@ -196,26 +204,32 @@ function result() {
 }
 
 function gloat() {
-    frame("","","","",
+    frame("","","","water",
         create("div","board","","",
             create("h1","result","","","")
         )
     )
-    if(win){
+    if(win == 1){
         get('result').innerHTML = "YOU WIN"
-    } else {
+    } else if(win == -1){
         get('result').innerHTML = "YOU LOSE"
+    } else {
+        get('result').innerHTML = "something rong"
     }
     var butt =  
         create("button","","","charMenu()","select Pack")
         +
         create("button","","","stageMenu()","select Stage")
         +
-        create("button","","","battle()","again")
+        create("button","","","tote()","again")
         +
         create("button","","","mainMenu()","main menu");
     
     get('board').innerHTML += butt;
+}
+
+function transaction() {
+
 }
 
 //multi new
@@ -249,7 +263,7 @@ function charList(){
 function stageList() {
     var stages = "";
     
-    for(i = 1; i < 8; i++){
+    for(i = 1; i < 14; i++){
         stages += create("div",`${i}`,"dest op","",
             `<img src="public/stage/${i}.png" alt="stage${i}" class="stage" />`    
         )
@@ -287,16 +301,16 @@ function banner() {
     if(get('banner')){
         get('banner').remove();
     }
-    
     document.body.innerHTML += 
     create("div","banner","ribbon","",
         create("button","banner-min","tiny",`minimize('banner')`,"-")
         +
         create("h2","sum","","",`${getBet()} $DMT at ${getRisk()} odds for ${getPrize()} $DMT`)
         +
-        create("button","","","next()","READY")
+        create("button","next","","next()","READY")
     );
-    slideIn('banner');
+    bannerSlide('banner');
+    get('disc').style.opacity = ".33";
 }
 
 function getBet() {
@@ -314,6 +328,8 @@ function minimize(target) {
     tar.style.top = "0px";
     tar.style.height = "10%";
     tar.innerHTML = create("button","banner-max","tiny","banner()","+");
+    get('disc').style.opacity = "1";
+    get('banner').style.padding = "0%";
 }
 
 bet = (w) => {
@@ -361,13 +377,13 @@ stats = async (charSelId) => {
 
 function summary() {
     sum = 
-    create("h2","bet","","",`You are wagering ${getBet()} $DMT`)
+    create("h4","bet","","",`You are wagering ${getBet()} $DMT`)
     +
-    create("h2","risk","","",`You are playing with ${getRisk()} odds`)
+    create("h4","risk","","",`You are playing with ${getRisk()} odds`)
     +
-    create("h2","prize","","",`You will recieve ${getPrize()} $DMT if you win`)
+    create("h4","prize","","",`You will recieve ${getPrize()} $DMT if you win`)
     +
-    create("h1","q","","","Are you ready to fight?")
+    create("h3","q","","","Are you ready to fight?")
 
     return sum
 }
@@ -376,9 +392,12 @@ function summary() {
                     
 //full spread
 boot();
-
+//start()
 //mainMenu();
 //soloFlow();
+//charMenu();
+//banner();
+//tote();
 //stageMenu();
 //tote()
 //battle();

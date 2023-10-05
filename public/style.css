@@ -1,4 +1,7 @@
-
+@font-face {
+    src: url(fonts/Fight/fight!.otf);
+    font-family: fight;
+}
 /* Reset some default styles for the page */
 html, body {
     margin: 0;
@@ -42,7 +45,6 @@ html, body {
     background-image: linear-gradient(to bottom, pink, yellow);
     height: 50vh;
     width: 60vw;
-    
 }
 
 .list {
@@ -93,7 +95,7 @@ html, body {
 #stage-sel{
     position:absolute;
     width: 80vw;
-    height: 40vh;
+    height: 80vh;
     top: 10vh;
     background-color: aquamarine;
 }
@@ -135,6 +137,9 @@ html, body {
     #player1, #player2 {
         top: 45%;
     }
+    #chosen {
+        left: -25%;
+    }
 }
 
 /* Desktop-specific styles */
@@ -169,6 +174,9 @@ html, body {
     #player1, #player2 {
         top: 50%;
     }
+    #chosen {
+        left: -10%;
+    }
 }
 
 #disc {
@@ -181,13 +189,13 @@ html, body {
     position: absolute;
     left: 15%;
     bottom: 3%;
-    background-color: gray;
+    background-image: url(./steel.png);
 }
 
 #chosen {
     height: inherit;
     align-self: center;
-    text-align: center;
+    position:relative
 }
 
 .draggable {
@@ -247,7 +255,8 @@ html, body {
     transition: all 0.1s; /* Animation duration and easing */
     width: 100vw;
     height: 30vh;
-    background-color: pink;
+    background-color: black;
+    background-image: url('./flames3.gif');
     display: flex;
 }
 
@@ -284,4 +293,66 @@ html, body {
     position: absolute;
     width:10vw;
     left: 45vw;
+}
+
+.water {
+    background-image: url(./water028.gif)
+}
+
+#dogpile {
+    height: 200vh;
+    z-index: 0;
+    position: absolute;
+}
+
+#intro {
+    background-image: url(./flames3.gif);
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position:fixed;
+}
+
+#start {
+    z-index: 1;
+}
+
+#title {
+    position: absolute;
+    font-size: 20vw;
+    text-align: center;
+}
+
+.fight {
+    font-family: fight;
+    font-weight: bolder;
+    color: orange;
+    text-shadow: white 2px 2px, black 4px 4px;
+    z-index: 1;
+}
+
+#count {
+    position: absolute;
+    font-size: 20vw;
+    top: -50%; /* Start offscreen above the screen */
+    left: 50%;
+    transition: all 0.1s; /* Animation duration and easing */
+    z-index: 2;
+}
+
+.sheet {
+    width: 90%;
+    height: 90%;
+    text-align: center;
+    overflow: scroll;
+}
+
+#sum {
+    padding: 10%;
+    color: white;
+}
+
+#next {
+    height: 100%;
+    width: 30vw;
 }

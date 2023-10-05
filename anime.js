@@ -97,7 +97,7 @@ function welcome() {
     
 }
 
-function slideIn(id) {
+function bannerSlide(id) {
     const element = document.getElementById(id);
     // Use a setTimeout to apply the transformation after a brief delay
     setTimeout(() => {
@@ -106,80 +106,60 @@ function slideIn(id) {
     }, 100);
 }
 
-// function logScreenResolution() {
-//   const resolution = `${window.innerWidth}x${window.innerHeight}`;
-//   console.log(`Screen Resolution: ${resolution}`);
+function countSlide(id) {
+  const element = document.getElementById(id);
+  // Use a setTimeout to apply the transformation after a brief delay
+  setTimeout(() => {
+    element.style.top = '50%'; /* Move to the vertical center of the screen */
+    element.style.transform = 'translate(-50%, -50%)'; /* Apply transformation */
+  }, 100);
+}
 
-//   // Attempt to access the arena and player1 elements
-//   const arena = document.getElementById('arena');
-//   const player1 = document.getElementById('player1');
+function countDown() {
+  document.body.innerHTML += 
+  create("h1","count","fight","","3");
+  console.log('countdown')
+  countSlide("count");
+  
+  setTimeout(() => {
+    get('count').remove()
+    document.body.innerHTML += 
+    create("h1","count","fight","","2");
+    countSlide("count");
+    
+  },1000)
+  setTimeout(() => {
+    get('count').remove()
+    document.body.innerHTML += 
+    create("h1","count","fight","","1");
+    countSlide("count");
+    
+  },2000)
+  setTimeout(() => {
+    get('count').remove()
+    document.body.innerHTML += 
+    create("h1","count","fight","","FIGHT");
+    countSlide("count");
+  },3000)
+  setTimeout(() => {
+    get('count').remove()
+  },4000)
 
-//   if (arena) {
-//     try {
-//       const arenaWidth = getComputedStyle(arena).width;
-//       const arenaHeight = getComputedStyle(arena).height;
+}
 
-//       console.log('Arena Styles:');
-//       console.log('Width:', arenaWidth);
-//       console.log('Height:', arenaHeight);
-//     } catch (err) {
-//       console.error('Error accessing arena styles:', err);
-//     }
-//   } else {
-//     console.log('No arena element found.');
-//   }
-
-//   if (player1) {
-//     try {
-//       const top = getComputedStyle(player1).top;
-//       const left = getComputedStyle(player1).left;
-//       const height = getComputedStyle(player1).height;
-
-//       console.log('Player 1 Styles:');
-//       console.log('Top:', top,'Left:', left,'Height:', height);
-//     } catch (err) {
-//       console.error('Error accessing player1 styles:', err);
-//     }
-//   } else {
-//     console.log('No player1 element found.');
-//   }
-// }
-
-
-// Add an event listener for the 'resize' event
-
-
-//window.addEventListener('resize', logScreenResolution);
-
-// Call the function initially to log the current screen resolution
-//logScreenResolution();
-
-// function changePacks(top,lr,height) {
-//   var p1 = get('player1').style;
-//   var p2 = get('player2').style;
-//   if(top != 0){
-//     p1.top = `${top}vh`;
-//     p2.top = p1.top;
-//   }
-//   if(lr != 0){
-//     p1.left = `${lr}vw`;
-//     p2.right = p1.left;
-//   }
-//   if(height != 0){
-//     p1.height = `${height}vh`
-//     p2.height = p1.height;
-//   }
-// }
 
 
 function battle1() {
   var p1 = get('player1');
   var p2 = get('player2');
+  hit(p2);
+  setTimeout(()=>{
+    hit(p1)
+  },1500);
   curInt = setInterval(()=>{
     hit(p2);
     setTimeout(() => {hit(p1)},1500);
   },3000)
-
 }
 
 // function battle2() {
@@ -194,10 +174,13 @@ function smash() {
     // Apply a CSS class to initiate the animation
     p1.classList.add('smashR');
     p2.classList.add('smashL');
-    if(win){
+    if(win == 1){
       knockOff(p2,1);
+    } else if(win == -1){
+      knockOff(p1,0);
     } else {
       knockOff(p1,0);
+      knockOff(p2,1);
     }
 }
 
@@ -241,3 +224,26 @@ function knockOff(el,right) {
   });
 }
 
+function panUp(zoomFactor) {
+  const image = document.getElementById('dogpile');
+  const container = document.getElementById('intro');
+  
+  const imageHeight = image.offsetHeight;
+  const containerHeight = container.offsetHeight;
+
+  if (imageHeight > containerHeight) {
+    // Calculate the maximum scroll distance
+    const maxScroll = imageHeight - containerHeight;
+    const maxZoomedWidth = image.width * zoomFactor;
+    const maxZoomedHeight = image.height * zoomFactor;
+    
+    // Apply CSS animations for smooth scrolling
+    image.style.transition = 'transform 4s'; // Adjust the duration as needed
+    image.style.transform = `translateY(${maxScroll}px)`;
+
+    image.style.transition = 'transform 4s, width 4s, height 4s'; // Adjust durations as needed
+    image.style.transform = `translateY(${maxScroll}px) scale(${zoomFactor})`;
+    //image.style.width = `${maxZoomedWidth}px`;
+    //image.style.height = `${maxZoomedHeight}px`;
+  }
+}
