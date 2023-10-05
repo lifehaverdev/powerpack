@@ -1,9 +1,9 @@
-
 //VARIABLES
 var phase;
 
-var character;
-var arena;
+var character = 12;
+var character1 = 8;
+var arena = 1;
 
 var wager = .1;
 var betMulti = 1;
@@ -11,6 +11,10 @@ var multiMax = 9;
 
 var odds = .5;
 var riskMulti = 0;
+
+var win;
+
+var curInt;
 
 function calculatePrize() {
     var prize = wager * (odds / .5);
@@ -74,14 +78,16 @@ function mainMenu(){
             )
             +
             create("li","","option","",
-                create("button","","float","multiFlow()","Create Multiplayer Game")
+                create("button","multi","float","multiFlow()","Create Multiplayer Game")
             )
             +
             create("li","","option","",
-                create("button","","float","joinFlow()","Join Multiplayer Game")
+                create("button","join","float","joinFlow()","Join Multiplayer Game")
             )
         )
     )
+    get("multi").disabled = true;
+    get("join").disabled = true;
 }
 
 // solo
@@ -154,11 +160,62 @@ function tote() {
         )
         +
         create("button","fight","","battle()","FIGHT")
+        +
+        create("button","check","","stageMenu()","wait")
     )
 }
 
 function battle() {
+    frame("","","match","",
+        create("div","","","",
+            `${action()}`
+        )
+    )
+    battle1();
+    checkChain("fight");
+}
 
+function action() {
+    var game = ""
+    game +=
+        create("div","game","","",
+            `<img src="public/stage/${arena}.png" alt="stage" id="arena" /> `
+            +
+            `<img src="public/char/${character}.png" alt="char0" id="player1" />`
+            +
+            `<img src="public/char/${character1}.png" alt="char1" id="player2" />`
+        )
+        
+    return game
+}
+
+function result() {
+    console.log('results');
+    clearInterval(curInt)
+    gloat();
+}
+
+function gloat() {
+    frame("","","","",
+        create("div","board","","",
+            create("h1","result","","","")
+        )
+    )
+    if(win){
+        get('result').innerHTML = "YOU WIN"
+    } else {
+        get('result').innerHTML = "YOU LOSE"
+    }
+    var butt =  
+        create("button","","","charMenu()","select Pack")
+        +
+        create("button","","","stageMenu()","select Stage")
+        +
+        create("button","","","battle()","again")
+        +
+        create("button","","","mainMenu()","main menu");
+    
+    get('board').innerHTML += butt;
 }
 
 //multi new
@@ -318,9 +375,10 @@ function summary() {
 
                     
 //full spread
-boot();
+//boot();
 
 //mainMenu();
 //soloFlow();
 //stageMenu();
 //tote()
+battle();

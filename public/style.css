@@ -132,6 +132,9 @@ html, body {
         height: 100px;
         width: 100px;
     }
+    #player1, #player2 {
+        top: 45%;
+    }
 }
 
 /* Desktop-specific styles */
@@ -162,6 +165,9 @@ html, body {
     .pp {
         height: 200px;
         width: 200px;
+    }
+    #player1, #player2 {
+        top: 50%;
     }
 }
 
@@ -243,4 +249,39 @@ html, body {
     height: 30vh;
     background-color: pink;
     display: flex;
+}
+
+#banner-min {
+    height: 10%;
+}
+
+#match {
+    background-color: black;
+}
+
+#arena {
+    width: 100vw;
+    max-height: 100vh;
+}
+
+#player1, #player2 {
+    position: absolute;
+    height: 15%;
+    z-index: 2;
+}
+
+#player1 {
+    left: 20%;
+}
+
+#player2 {
+    right: 20%;
+    transform:scaleX(-1)
+}
+
+#result {
+    top: 56%;
+    position: absolute;
+    width:10vw;
+    left: 45vw;
 }

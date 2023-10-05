@@ -34,4 +34,25 @@ checkChain = async(w) => {
             get("wager").innerHTML = "wager: " + `${wager*betMulti} $DMT`;
         })
     }
+    if(w=="fight"){
+        setTimeout(function () {
+            console.log("vrf");
+            document.body.innerHTML += 
+                create("button","result","","result()","FIN");
+            clearInterval(curInt);
+            smash();
+            win = vrf();
+        },10000)
+    }
+}
+
+function vrf() {
+    
+        // Generate a random number between 0 and 1
+        const random = Math.random();
+        
+        // If the random number is less than 0.5, consider it heads (true)
+        // Otherwise, consider it tails (false)
+        return random < getRisk();
+    
 }

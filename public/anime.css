@@ -8,6 +8,15 @@
     }
 }
 
+@keyframes fadeIn {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
 @keyframes bounce {
     0%, 100% {
         transform: translateY(0);
@@ -26,10 +35,72 @@
     }
 }
 
+@keyframes knockOffRight {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+    }
+    100% {
+      transform: translateY(-100vh) translateX(100vw) rotate(45deg);
+    }
+}
+
+@keyframes knockOffLeft {
+    0% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+    }
+    100% {
+      transform: translateY(-100vh) translateX(-100vw) rotate(-45deg);
+    }
+}
+
+@keyframes smashRight {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translate(30vw);
+    }
+}
+
+@keyframes smashLeft {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    50% {
+        transform: translate(-30vw);
+    }
+}
+
+.smashR {
+    animation: smashRight .2s;
+}
+
+.smashL {
+    animation: smashLeft .2s;
+}
+  
+.knock-off-right {
+    animation: knockOffRight 1s ease-in-out; /* Adjust the duration as needed */
+    animation-fill-mode: forwards; /* Keeps the end state after animation */
+}
+
+.knock-off-left {
+    animation: knockOffLeft 1s ease-in-out; /* Adjust the duration as needed */
+    animation-fill-mode: forwards; /* Keeps the end state after animation */
+}
+
 /* Create a class for fade-in animation */
-.fade-in {
+.fade-in-out {
     /* Add fade-in animation */
     animation: fadeIn 1s ease-in-out;
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in;
+}
+
+.fade-out{
+    animation: fadeOut 1s ease-out;
 }
 
 /* Create a class for bounce animation */
@@ -40,6 +111,10 @@
 
 .float {
     animation: float 3s ease-in-out infinite;
+}
+
+.float2 {
+    animation: scaleX(-1), float 3s ease-in-out infinite;
 }
 
 #boot {
