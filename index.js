@@ -375,10 +375,10 @@ function summary() {
 
                     
 //full spread
-//boot();
+boot();
 
 //mainMenu();
 //soloFlow();
 //stageMenu();
 //tote()
-battle();
+//battle();
