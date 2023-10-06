@@ -13,35 +13,66 @@ function cast(...inner){
 
 //COSMETIC
 function frame(idO, clastO, idI, clastI, bod) {
-    cast(
-        create("div",idO,"container "+clastO,"",
-            create("div",idI,"container "+clastI,"",
-                bod
-            )
-            +
-            create("div","bar","","",
-                create("button","back","","back()","BACK")
-                +
-                create("button","vol","","soundSwitch()","SOUND")
-                +
-                create("div","balance","","",
-                    create("h3","wallet","","",`WALLET:${playerWallet}$DMT`)
-                    +
-                    create("h3","table","","",`TABLE:${table}$DMT`)
-                    +
-                    create("h3","purse","","",`PURSE:${purse}$DMT`)
+    if(!isMobileDevice()){
+        cast(
+            create("div",idO,"container "+clastO,"",
+                create("div",idI,"container "+clastI,"",
+                    bod
                 )
                 +
-                create("button","cash-out","","collect()","Collect")
+                create("div","bar","","",
+                    create("button","back","","back()","BACK")
+                    +
+                    create("button","vol","","soundSwitch()","SOUND")
+                    +
+                    create("div","balance","","",
+                        create("h3","wallet","","",`WALLET:${playerWallet}$DMT`)
+                        +
+                        create("h3","table","","",`TABLE:${table}$DMT`)
+                        +
+                        create("h3","purse","","",`PURSE:${purse}$DMT`)
+                    )
+                    +
+                    create("button","cash-out","","collect()","Collect")
+                )
             )
         )
-    )
+    } else {
+        cast(
+            create("div",idO,"container "+clastO,"",
+                create("div",idI,"container "+clastI,"",
+                    bod
+                )
+                +
+                create("div","bar","","",
+                    create("button","back","","back()","BACK")
+                    +
+                    create("button","vol","","soundSwitch()","SOUND")
+                    +
+                    create("div","balance","","",
+                        create("h3","wallet","","",``)
+                        +
+                        create("h3","table","","",`${table}$DMT`)
+                        +
+                        create("h3","purse","","",``)
+                    )
+                    +
+                    create("button","cash-out","","collect()","Collect")
+                )
+            )
+        )
+    }
+    
 }
 
 function updateBar() {
-    get('wallet').innerHTML = `WALLET:${playerWallet}$DMT`;
-    get('table').innerHTML = `TABLE:${table}$DMT`;
-    get('purse').innerHTML = `PURSE:${purse}$DMT`;
+    if(!isMobileDevice()){
+        get('wallet').innerHTML = `WALLET:${playerWallet}$DMT`;
+        get('table').innerHTML = `TABLE:${table}$DMT`;
+        get('purse').innerHTML = `PURSE:${purse}$DMT`;
+    } else {
+        get('table').innerHTML = `${table}$DMT`;
+    }
 }
 
 function soundSwitch() {

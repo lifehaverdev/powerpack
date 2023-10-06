@@ -1,7 +1,9 @@
 @font-face {
-    src: url(fonts/Fight/fight!.otf) format('otf')',
-         url(fonts/Fight/Fight!.woff) format('woff');
     font-family: fight;
+    src: url('fonts/Fight/Fight!.eot');
+    src: url('fonts/Fight/fight!.otf') format('opentype'),
+         
+         url('fonts/Fight/Fight!.woff') format('woff');
 }
 /* Reset some default styles for the page */
 html, body {

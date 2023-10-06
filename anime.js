@@ -68,6 +68,17 @@ interact('.op').dropzone({
       }
     },
 });
+
+function isMobileDevice() {
+  // Get the current screen width
+  const screenWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
+
+  // Define the mobile breakpoint (e.g., 769px)
+  const mobileBreakpoint = 769;
+
+  // Check if the screen width is less than the mobile breakpoint
+  return screenWidth < mobileBreakpoint;
+}
   
 //animation
 function welcome() {
