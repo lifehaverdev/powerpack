@@ -22,19 +22,19 @@ var userExp = {
     
 }
 
-function addExp(odds, packId) {
+function addExp(packId) {
     if(userExp[packId]){
-        console.log('pack found');
-        userExp[packId] += 1;
+        //console.log('pack found');
+        userExp[packId] += 50 * (.5 / odds) ;
     } else {
-        console.log('fresh pack');
-        userExp[packId] = 1;
+        //console.log('fresh pack');
+        userExp[packId] = 50 * (.5 / odds ) ;
     }
     console.log(userExp)
 }
 
 function calculatePrize() {
-    prize = wager * (odds / .5);
+    prize = wager * ((1-odds) / .5) * ((1 - odds) / .5);
 }
 
 //sound
@@ -45,11 +45,17 @@ var sound = new Howl({
     loop: true
   });
 
+// var menu = new Howl({
+//     src: ['public/sounds/menu.mp3'],
+//     html5: true,
+//     loop: true
+// });
+
 var menu = new Howl({
-    src: ['public/sounds/menu.mp3'],
+    src: ['public/sounds/time.mp3'],
     html5: true,
     loop: true
-});
+})
 
 //FLOW
 function next(){
@@ -206,10 +212,10 @@ function tote() {
 }
 
 function battle() {
-    if(hear){
-        menu.stop()
-        sound.play()
-    }
+    // if(hear){
+    //     menu.stop()
+    //     sound.play()
+    // }
     if(table < getBet()){
         fund(getBet()-table);
     }
@@ -241,10 +247,10 @@ function action() {
 }
 
 function result() {
-    if(hear){
-        sound.stop()
-        menu.play()
-    }
+    // if(hear){
+    //     sound.stop()
+    //     menu.play()
+    // }
     clearInterval(curInt);
     if(win > 0){
         victory(getPrize());
@@ -408,7 +414,6 @@ risk = (w) => {
     } else {
         riskMulti--
     }
-    console.log(riskMulti)
     get("odds").innerHTML = "odds: " + `${getRisk()}`;
     if(riskMulti > -4){
         get('risk-less').disabled = false;

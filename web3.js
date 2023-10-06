@@ -1,4 +1,4 @@
-var playerWallet = 1000 //dmt
+var playerWallet = 50 //dmt
 var purse = 50 //dmt
 var table = 0;
 const safety = 8
@@ -21,7 +21,7 @@ function defeat() {
 function victory(bet) {
     bet = parseFloat(bet);
     table = table + bet;
-    addExp(getRisk(),character);
+    addExp(character);
     updateBar()
 }
 
@@ -109,9 +109,58 @@ function vrf() {
     
         // Generate a random number between 0 and 1
         const random = Math.random();
-        
+        console.log(random);
         // If the random number is less than 0.5, consider it heads (true)
         // Otherwise, consider it tails (false)
-        return random < getRisk();
+        return random < parseFloat(getRisk());
     
+}
+
+function simRf(odd) {
+    const random = Math.random();
+    return random < odd;
+}
+
+function getPrizeSim(wage, odd) {
+    return (wage * (.5 / odd));
+}
+
+function printMulti() {
+    for(let i = 0; i < 100; i++){
+        let odd = (i/100);
+        console.log('odd',odd,'multi',(1 * (.5/odd) * (1.5 - odd)))
+    }
+}
+
+function sim(odd) {
+    var play = 100;
+    var tabl = 0;
+    var purs = 1000;
+    var wage;
+    const turn = 1000;
+
+    wage = 1;
+    var count = 10000;
+    while(play > 0 && count > 0 && tabl < purs){
+        if(tabl < wage){
+            play = play - (wage - tabl);
+            tabl = tabl + (wage - tabl);
+            purs = purs + (wage - tabl);
+        }
+        if(tabl > 10){
+            play = play + tabl;
+            purs = purs - tabl;
+            tabl = 0;
+        }
+        var game = simRf(odd);
+        if(game){
+            //win
+            tabl = tabl + getPrizeSim(wage,odd);
+        } else {
+            tabl = tabl - wage;
+        }
+        count --;
+    }
+    console.log(`sim complete for odds ${odd} table:`,tabl,'player',play,'purs',purs)
+
 }
