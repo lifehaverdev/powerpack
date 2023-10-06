@@ -2,7 +2,7 @@
     font-family: fight;
     src: url('fonts/Fight/Fight!.eot');
     src: url('fonts/Fight/fight!.otf') format('opentype'),
-         
+         url('fonts/Fight/Fight!.woff2') format('woff2'),
          url('fonts/Fight/Fight!.woff') format('woff');
 }
 /* Reset some default styles for the page */
