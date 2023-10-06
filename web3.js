@@ -3,10 +3,23 @@ walletConnect = () => {
     const butt = get("wallet-ask");
     butt.innerHTML = 
         `<img src="public/loading.gif" alt="loading.."/>`
-    setTimeout(function (){
-        console.log("simulating wallet connection");
-        mainMenu();
-    }, 2000)
+    // setTimeout(function (){
+    //     console.log("simulating wallet connection");
+    //     mainMenu();
+    // }, 2000)
+    fakeTransaction('connect');
+    // while(thinking){
+    //     //stay here
+    // }
+    mainMenu();
+}
+
+fakeTransaction = (w) => {
+    alert(w)
+}
+
+writeChain = async(w) => {
+    return ""
 }
 
 
@@ -37,6 +50,9 @@ checkChain = async(w) => {
     if(w=="fight"){
         setTimeout(function () {
             console.log("vrf");
+            if(hear){
+                sound.stop()
+            }
             if(vrf()){
                 win = 1;
             } else {

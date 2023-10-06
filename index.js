@@ -1,24 +1,75 @@
 //VARIABLES
-var phase;
+    //state
+    var phase;
+    var hear = false;
+    var character = 12;
+    var character1 = 8;
+    var arena = 1;
+    var curInt;
+    //betting
+    var wager = .1;
+    var betMulti = 1;
+    var multiMax = 9;
+    var odds = .5;
+    var riskMulti = 0;
+    //game
+    var win = 0;
+    var prize;
 
-var character = 12;
-var character1 = 8;
-var arena = 1;
+//working
+var playerWallet = 1000 //dmt
+var purse = 50 //dmt
+var table = 0;
+const safety = 8
 
-var wager = .1;
-var betMulti = 1;
-var multiMax = 9;
+function fund(amt) {
+    fakeTransaction(`youre gonna pay ${amt} $DMT to the table so you can play`);
+    amt = parseFloat(amt);
+    playerWallet = playerWallet - amt;
+    console.log('playerWallet inside fund',playerWallet)
+    table = table + amt;
+    updateBar();
+}
 
-var odds = .5;
-var riskMulti = 0;
+function defeat() {
+    purse = purse + table;
+    table = 0;
+    updateBar();
+}
 
-var win = 0;
+function victory(bet) {
+    bet = parseFloat(bet);
+    table = table + bet;
+    updateBar()
+}
 
-var curInt;
+function collect() {
+    fakeTransaction(`you are collecting ${table} $DMT to your personal wallet`);
+    table = parseFloat(table);
+    playerWallet = playerWallet + table;
+    purse = purse - table;
+    table = 0;
+    updateBar();
+}
+//
 
 function calculatePrize() {
-    var prize = wager * (odds / .5);
+    prize = wager * (odds / .5);
 }
+
+//sound
+
+var sound = new Howl({
+    src: ['public/sounds/song.mp3'],
+    html5: true,
+    loop: true
+  });
+
+var menu = new Howl({
+    src: ['public/sounds/menu.mp3'],
+    html5: true,
+    loop: true
+});
 
 //FLOW
 function next(){
@@ -48,11 +99,16 @@ function boot(){
         "boot","","logo","",
         `<img src="public/bwlogosmol.png" alt="miladystation">`
     )
+    get('bar').style.display = "none";
     welcome();
 }
 
-function start(){
+function start(loud){
     phase = "start"
+    if(loud){
+        hear = true;
+        menu.play();
+    }
     frame("","","intro","container",
         create("h1","title","fight","","POWER PACKS ONCHAINED")
         +
@@ -62,6 +118,7 @@ function start(){
         +
         `<img src="./public/dogpile.png" id="dogpile" />`
     )
+    get('bar').style.display = "none";
     panUp(1.3)
 }
 
@@ -72,6 +129,7 @@ function auth(){
             "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet (jk)"
         )
     )
+    get('bar').style.display = "none";
 }
 
 function mainMenu(){
@@ -170,6 +228,13 @@ function tote() {
 }
 
 function battle() {
+    if(hear){
+        menu.stop()
+        sound.play()
+    }
+    if(table == 0){
+        fund(getBet());
+    }
     frame("","","match","",
         create("div","","","",
             `${action()}`
@@ -198,8 +263,17 @@ function action() {
 }
 
 function result() {
+    if(hear){
+        sound.stop()
+        menu.play()
+    }
     console.log('results');
-    clearInterval(curInt)
+    clearInterval(curInt);
+    if(win > 0){
+        victory(getPrize());
+    } else if(win < 0){
+        defeat(table);
+    }
     gloat();
 }
 
@@ -348,6 +422,7 @@ bet = (w) => {
     if(betMulti > multiMax){
     get('bet-more').disabled = true;
     }
+    bannerUpdate()
 }
 
 risk = (w) => {
@@ -369,6 +444,11 @@ risk = (w) => {
     } else {
         get('risk-more').disabled = false;
     }
+    bannerUpdate()
+}
+
+function bannerUpdate() {
+    get('sum').innerHTML = `${getBet()} $DMT at ${getRisk()} odds for ${getPrize()} $DMT`
 }
 
 stats = async (charSelId) => {
@@ -393,6 +473,7 @@ function summary() {
 //full spread
 boot();
 //start()
+//auth()
 //mainMenu();
 //soloFlow();
 //charMenu();

@@ -356,3 +356,45 @@ html, body {
     height: 100%;
     width: 30vw;
 }
+
+#bar {
+    position: fixed;
+    top: 0%;
+    width: 100vw;
+    height: 5vh;
+    display: inline-flex;
+    background-color: pink;
+}
+
+#bar #balance{
+    display:inline-flex;
+}
+
+#bar div h3 {
+    margin-left: 5%;
+}
+
+#wallet {
+    color: green;
+}
+
+#table {
+    color: black;
+}
+
+#purse {
+    color: green;
+}
+
+#metamask {
+    position: absolute;
+    top: 40%;
+    height: 20%;
+    right: 5%;
+    width: 30%;
+    background-color: white;
+}
+
+#cash-out {
+    margin-left: auto;
+}

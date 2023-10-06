@@ -18,9 +18,38 @@ function frame(idO, clastO, idI, clastI, bod) {
             create("div",idI,"container "+clastI,"",
                 bod
             )
+            +
+            create("div","bar","","",
+                create("button","back","","back()","BACK")
+                +
+                create("button","vol","","soundSwitch()","SOUND")
+                +
+                create("div","balance","","",
+                    create("h3","wallet","","",`WALLET:${playerWallet}$DMT`)
+                    +
+                    create("h3","table","","",`TABLE:${table}$DMT`)
+                    +
+                    create("h3","purse","","",`PURSE:${purse}$DMT`)
+                )
+                +
+                create("button","cash-out","","collect()","Collect")
+            )
         )
     )
 }
+
+function updateBar() {
+    get('wallet').innerHTML = `WALLET:${playerWallet}$DMT`;
+    get('table').innerHTML = `TABLE:${table}$DMT`;
+    get('purse').innerHTML = `PURSE:${purse}$DMT`;
+}
+
+function soundSwitch() {
+    hear = !hear;
+    sound.stop();
+    menu.stop();
+}
+
 function get(id) {
     return document.getElementById(id);
 }

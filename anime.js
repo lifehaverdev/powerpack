@@ -92,7 +92,12 @@ function welcome() {
         }
     }, 2);
     setTimeout(function() {
-        start();
+        frame("","","","",
+          create("button","sound","","start(true)","SOUND")
+          +
+          create("button","quiet","","start(false)","NO SOUND")
+        )
+        get('bar').style.display = "none";
     }, 2000);
     
 }
