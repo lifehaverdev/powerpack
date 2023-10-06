@@ -1,4 +1,39 @@
+var playerWallet = 1000 //dmt
+var purse = 50 //dmt
+var table = 0;
+const safety = 8
 
+function fund(amt) {
+    fakeTransaction(`youre gonna pay ${amt} $DMT to the table so you can play`);
+    amt = parseFloat(amt);
+    playerWallet = playerWallet - amt;
+    purse = purse + amt;
+    table = table + amt;
+    updateBar();
+}
+
+function defeat() {
+    //purse = purse + parseFloat(getBet());
+    table = table - parseFloat(getBet());
+    updateBar();
+}
+
+function victory(bet) {
+    bet = parseFloat(bet);
+    table = table + bet;
+    addExp(getRisk(),character);
+    updateBar()
+}
+
+function collect() {
+    fakeTransaction(`you are collecting ${table} $DMT to your personal wallet`);
+    table = parseFloat(table);
+    playerWallet = playerWallet + table;
+    purse = purse - table;
+    table = 0;
+    updateBar();
+}
+//
 walletConnect = () => {
     const butt = get("wallet-ask");
     butt.innerHTML = 
@@ -23,7 +58,7 @@ writeChain = async(w) => {
 }
 
 
-checkChain = async(w) => {
+checkChain = async(w,i) => {
     if(w == "games"){
         setTimeout(function() {
             console.log('chainchecked');
@@ -34,8 +69,12 @@ checkChain = async(w) => {
     if(w == "stats"){
         setTimeout(function() {
             console.log('chainchekced');
-            get('exp').innerHTML = "exp: " + "355";
-            get('wins').innerHTML = "wins: " + "3";
+            console.log(userExp[i])
+            if(userExp[i]){
+                get('exp').innerHTML = "exp: " + `${userExp[i]}`;
+            } else {
+                get('exp').innerHTML = "exp: " + "0";
+            }
             get('name').innerHTML = "name: " + "";
             return ["355","3",""];
         },500)

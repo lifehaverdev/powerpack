@@ -17,41 +17,21 @@
     var prize;
 
 //working
-var playerWallet = 1000 //dmt
-var purse = 50 //dmt
-var table = 0;
-const safety = 8
 
-function fund(amt) {
-    fakeTransaction(`youre gonna pay ${amt} $DMT to the table so you can play`);
-    amt = parseFloat(amt);
-    playerWallet = playerWallet - amt;
-    console.log('playerWallet inside fund',playerWallet)
-    table = table + amt;
-    updateBar();
+var userExp = {
+    
 }
 
-function defeat() {
-    purse = purse + table;
-    table = 0;
-    updateBar();
+function addExp(odds, packId) {
+    if(userExp[packId]){
+        console.log('pack found');
+        userExp[packId] += 1;
+    } else {
+        console.log('fresh pack');
+        userExp[packId] = 1;
+    }
+    console.log(userExp)
 }
-
-function victory(bet) {
-    bet = parseFloat(bet);
-    table = table + bet;
-    updateBar()
-}
-
-function collect() {
-    fakeTransaction(`you are collecting ${table} $DMT to your personal wallet`);
-    table = parseFloat(table);
-    playerWallet = playerWallet + table;
-    purse = purse - table;
-    table = 0;
-    updateBar();
-}
-//
 
 function calculatePrize() {
     prize = wager * (odds / .5);
@@ -175,8 +155,6 @@ function charMenu(){
         create("div","spec","","",
             create("p","exp","stat","","exp: ")
             +
-            create("p","wins","stat","","wins: ")
-            +
             create("p","name","stat","","name: ")
         )
         +
@@ -199,7 +177,7 @@ function charMenu(){
         )
     )
     get('bet-less').disabled = true;
-    checkChain("play");
+    checkChain("play",0);
 }
 
 function stageMenu() {
@@ -232,8 +210,8 @@ function battle() {
         menu.stop()
         sound.play()
     }
-    if(table == 0){
-        fund(getBet());
+    if(table < getBet()){
+        fund(getBet()-table);
     }
     frame("","","match","",
         create("div","","","",
@@ -245,7 +223,7 @@ function battle() {
         battle1();
     },4000)
     
-    checkChain("fight");
+    checkChain("fight",0);
 }
 
 function action() {
@@ -267,7 +245,6 @@ function result() {
         sound.stop()
         menu.play()
     }
-    console.log('results');
     clearInterval(curInt);
     if(win > 0){
         victory(getPrize());
@@ -347,7 +324,7 @@ function stageList() {
 
 function gameList(){
     var games = "";
-    var live = checkChain();
+    var live = checkChain("",0);
         for(i=0; i < live.length; i++){
             games += create("div","${i}","game float","",`Game ${live[i]}`+
                 create("button","","join",`joinGame(${live[i]})`,"Join")
@@ -367,7 +344,7 @@ loadCard = async(id) => {
     //stats(id)
     get('picked').children[0].style.classList = "card"
     //console.log(get('picked').children[0].style.classList)
-    stats();
+    stats(id);
     banner();
 }
 
@@ -452,7 +429,7 @@ function bannerUpdate() {
 }
 
 stats = async (charSelId) => {
-        await checkChain("stats");
+        await checkChain("stats",charSelId);
 }
 
 function summary() {

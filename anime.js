@@ -134,7 +134,6 @@ function countSlide(id) {
 function countDown() {
   document.body.innerHTML += 
   create("h1","count","fight","","3");
-  console.log('countdown')
   countSlide("count");
   
   setTimeout(() => {
@@ -254,10 +253,10 @@ function panUp(zoomFactor) {
     const maxZoomedHeight = image.height * zoomFactor;
     
     // Apply CSS animations for smooth scrolling
-    image.style.transition = 'transform 4s'; // Adjust the duration as needed
+    image.style.transition = 'transform 7s'; // Adjust the duration as needed
     image.style.transform = `translateY(${maxScroll}px)`;
 
-    image.style.transition = 'transform 4s, width 4s, height 4s'; // Adjust durations as needed
+    image.style.transition = 'transform 7s, width 7s, height 7s'; // Adjust durations as needed
     image.style.transform = `translateY(${maxScroll}px) scale(${zoomFactor})`;
     //image.style.width = `${maxZoomedWidth}px`;
     //image.style.height = `${maxZoomedHeight}px`;
