@@ -71,6 +71,22 @@
     }
 }
 
+/* Define the animation properties and keyframes */
+@keyframes spawnSlideIn {
+    0% {
+      top: -30%; /* Start position off the screen */
+      /* transform: translate(0, 0); */
+    }
+    100% {
+      top: 45%; 
+      /* transform: translate(0, 500%); Move vertically to the final position */
+    }
+}
+
+.spawn-slide {
+    animation: spawnSlideIn 1s ease forwards;
+}
+
 .smashR {
     animation: smashRight .2s;
 }

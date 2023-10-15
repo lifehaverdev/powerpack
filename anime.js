@@ -3,6 +3,27 @@ var position = { x: 0, y: 0 }
 
 aniTimeout = [];
 
+var cadence = {
+  fight: {
+    spawn: 1000,
+    countdown: 2000,
+    battle: 6000
+  },
+  countDown: {
+    tempo: 1000
+  },
+  hit: {
+    flicker: 500,
+    count: 1500
+  },
+  battle1: {
+    bell: 7000
+  },
+  smash: {
+    air: 1000
+  }
+}
+
 interact('.draggable').draggable({
   listeners: {
     start (event) {
@@ -133,105 +154,100 @@ function countSlide(id) {
   }, 100);
 }
 
-function spawnSlide(id,right) {
+function spawnSlide(id) {
   el = get(id);
-  // Set the initial position (top: 0%) before the animation starts
-  el.style.top = '0%';
-  // Use a setTimeout to apply the transformation after a brief delay
-  setTimeout(() => {
-    if(right == 0){
-      el.style.left = '20%'; /* Move to 20% from the left */
-    } else if (right == 1){
-      el.style.right = '20%'; /* Move to 20% from the left */
+  //unhide the element if it is hidden
+  if(el.style.display == "none"){
+    el.style.display = "";
+  }
+
+  el.classList.add('spawn-slide');
+
+  document.addEventListener(`animationend`, (event) => {
+    if (event.animationName === "spawnSlideIn") {
+      event.target.classList.remove('spawn-slide');
     }
-    el.style.top = '45%'; /* Move to 45% from the top */
-  }, 1000);
+  }, {once: true});
 }
 
 function countDown() {
-  spawnSlide('player1',0);
-  spawnSlide('player2',1);
-
+  const tempo = cadence.countDown.tempo;
   document.body.innerHTML += 
-  create("h1","count","fight","","3");
+    create("h1","count","fight","","3");
   countSlide("count");
-  
   setTimeout(() => {
     get('count').remove()
     document.body.innerHTML += 
-    create("h1","count","fight","","2");
+      create("h1","count","fight","","2");
     countSlide("count");
-    
-  },1000)
+  },tempo)
   setTimeout(() => {
     get('count').remove()
     document.body.innerHTML += 
-    create("h1","count","fight","","1");
+      create("h1","count","fight","","1");
     countSlide("count");
-    
-  },2000)
+  },tempo*2)
   setTimeout(() => {
     get('count').remove()
     document.body.innerHTML += 
-    create("h1","count","fight","","FIGHT");
+      create("h1","count","fight","","FIGHT");
     countSlide("count");
-  },3000)
+  },tempo*3)
   setTimeout(() => {
     get('count').remove()
-  },4000)
+  },tempo*4)
 }
 
 function battle1() {
+  console.log('battle1');
   var p1 = get('player1');
   var p2 = get('player2');
+  const tempo = cadence.hit.count;
+  const bell = cadence.battle1.bell;
+  //first blood
   hit(p2);
   setTimeout(()=>{
     hit(p1)
-  },1500);
-  curInt = setInterval(()=>{
-    hit(p2);
-    setTimeout(() => {hit(p1)},1500);
-  },3000)
+  },tempo);
+  //exchanges
+  setTimeout(()=>{
+    curInt = setInterval(()=>{
+      hit(p2);
+      setTimeout(() => {hit(p1)},tempo);
+    },tempo*2)
+  },tempo)
+  
+  //decisive
   setTimeout(function () {
-    if(score.length > 0){
-      smash();
-    } else {
-      setTimeout(function () {
-        if(score.length > 0){
-          smash()
-        } else {
-          console.log('some ting wong')
-        }
-      },5000)
-    }
-  },5000)
+    smash();
+  },bell)
 }
 
 smash = () => {
+  console.log('smash');
   clearInterval(curInt);
   var p1 = get('player1');
   var p2 = get('player2');
     // Apply a CSS class to initiate the animation
     p1.classList.add('smashR');
     p2.classList.add('smashL');
-    console.log('smash score',score[round])
-    if(score[round]){
-      knockOff(p2,1);
-    } else if(!score[round]){
-      knockOff(p1,0);
-    } else {
-      knockOff(p1,0);
-      knockOff(p2,1);
-    }
-    p1.classList.remove('smashR');
-    p2.classList.remove('smashL');
-    if(game.p1.stock > 0 && game.p2.stock > 0){
-      battle1();
-    }
-    round++;
+    setTimeout(()=>{
+      if(score[round]){
+        knockOff(p2,1);
+      } else if(!score[round]){
+        knockOff(p1,0);
+      } else {
+        knockOff(p1,0);
+        knockOff(p2,1);
+      }
+      p1.classList.remove('smashR');
+      p2.classList.remove('smashL');
+    },100)
+
 }
 
 function hit(el) {
+  console.log('hit')
   let count = 0;
   const flickerInterval = setInterval(() => {
     if (count < 3) {
@@ -247,16 +263,17 @@ function hit(el) {
 
         // Reset the transform property to its original state
         el.style.transform = existingTransform;
-      }, 200); // This delay should match the transition duration
+      }, cadence.hit.flicker/2); // This delay should match the transition duration
 
       count++;
     } else {
       clearInterval(flickerInterval); // Stop the flickering after 3 times
     }
-  }, 500); // Adjust the interval as needed (e.g., 500ms for a flicker every half-second)
+  }, cadence.hit.flicker); // Adjust the interval as needed (e.g., 500ms for a flicker every half-second)
 }
 
 function knockOff(el,right) {
+  console.log('knockOff');
   // Apply a CSS class to initiate the animation
   if(right == 0){
     el.classList.add('knock-off-left');
@@ -266,19 +283,35 @@ function knockOff(el,right) {
     game.p2.stock -= 1;
   }
   // Remove the element from the DOM after the animation ends
+  // 1 second
   el.addEventListener('animationend', () => {
-    //el.remove();
-    get('action').innerHTML = action();
-    if(right == 0){
-      spawnSlide('player1',right);
+    if(game.p1.stock > 0 && game.p2.stock > 0){
+      get('action').innerHTML = action();
+      if(right == 0){
+        spawnSlide('player1',right);
+      } else {
+        spawnSlide('player2',right);
+      }
     } else {
-      spawnSlide('player2',right);
+      if(game.p1.stock == 0){
+        document.getElementsById('0stock11').style.display = 'none'
+      }else if(game.p2.stock == 0){
+        document.getElementsById('1stock11').style.display = 'none'
+      }
     }
-  });
-  if(game.p1.stock == 0 || game.p1.stock == 0){
-    document.body.innerHTML += 
-    create("button","result","","result()","FIN");
-  }
+    
+  },{once: true});
+
+  setTimeout(()=>{
+    if(game.p1.stock > 0 && game.p2.stock > 0){
+      battle1();
+    }else{
+
+      document.body.innerHTML += 
+      create("button","result","","result()","FIN");
+    }
+  },cadence.smash.air)
+  round++;
 }
 
 function panUp(zoomFactor) {

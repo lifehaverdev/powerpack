@@ -57,7 +57,6 @@ writeChain = async(w) => {
     }
 }
 
-
 checkChain = async(w,i) => {
     if(w == "games"){
         setTimeout(function() {
@@ -103,7 +102,7 @@ function vrf(num) {
         // Otherwise, consider it tails (false)
         ran.push(random < parseFloat(.5));
     }
-    // console.log('score',score)
+    console.log('score',ran)
     random = ran;
     return ran;
 }

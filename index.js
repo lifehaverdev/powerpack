@@ -8,15 +8,11 @@
     var curInt;
     var walletPacks = [];
     //betting
-    var wager = .1;
-    var betMulti = 1;
     var multiMax = 9;
     var odds = .5;
-    var riskMulti = 0;
     //game
     var win = 0;
     var streak = 0;
-    var prize;
     var stocks = 3;
     var random = [];
     var score = [];
@@ -175,43 +171,46 @@ function battle() {
     //     sound.play()
     // }
     round = 0;
-    checkChain("fight");
+    writeChain("fight");
     game.p1.stock = stocks;
-    game.p2.stock = stocks;
+    game.p2.stock = game.p1.stock;
     frame("","","match","",
         create("div","action","","",
             `${action()}`
         )
     )
-    countDown()
+    get('player1').style.display = 'none';
+    get('player2').style.display = 'none';
     fight()
 }
 
 function fight() {
+    spawnSlide('player1');
+    spawnSlide('player2');    
+    
+    setTimeout(()=>{
+        get('action').innerHTML = action();
+    },cadence.fight.spawn)
+
+    setTimeout(()=>{
+        countDown()
+    },cadence.fight.countdown)
+
     setTimeout(()=>{
         battle1();
-    },4000)
-    // for(let i = 0; i < stocks*2 && game.p1.stock > 0 && game.p2.stock > 0; i++){
-    //     setTimeout(()=>{
-    //         battle1();
-    //     },4000*(i+2))
-    // }
+    },cadence.fight.battle)
 }
 
 function action() {
-    var game = ""
-    game +=
-        create("div","game","","",
-            `<img src="public/stage/${arena}.png" alt="stage" id="arena" /> `
-            +
-            `<img src="public/char/${character}.png" alt="char0" id="player1" />`
-            +
-            `<img src="public/char/${character1}.png" alt="char1" id="player2" />`
-            +
-            getStocks()
-        )
-        
-    return game
+    return  create("div","game","","",
+                `<img src="public/stage/${arena}.png" alt="stage" id="arena" /> `
+                +
+                `<img src="public/char/${character}.png" alt="char0" id="player1" />`
+                +
+                `<img src="public/char/${character1}.png" alt="char1" id="player2" />`
+                +
+                getStocks()
+            )
 }
 
 function getStocks() {
@@ -369,7 +368,6 @@ function minimize(target) {
     get('banner').style.padding = "0%";
 }
 
-
 risk = (w) => {
     if(w > 0){
         stocks++
@@ -403,12 +401,10 @@ function summary() {
     return sum
 }
 
-
-                    
 //full spread
-//boot();
+boot();
 //start()
-auth()
+//auth()
 //mainMenu();
 //charMenu();
 //banner();
@@ -416,3 +412,4 @@ auth()
 //stageMenu();
 //tote()
 //battle();
+//spare();
