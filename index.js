@@ -6,6 +6,7 @@
     var character1 = 8;
     var arena = 1;
     var curInt;
+    var walletPacks = [];
     //betting
     var wager = .1;
     var betMulti = 1;
@@ -14,12 +15,26 @@
     var riskMulti = 0;
     //game
     var win = 0;
+    var streak = 0;
     var prize;
+    var stocks = 3;
+    var random = [];
+    var score = [];
+    var round;
 
 //working
 
 var userExp = {
     
+}
+
+var game = {
+    p1: {
+        stock: 0
+    },
+    p2: {
+        stock: 0
+    }
 }
 
 function addExp(packId) {
@@ -57,92 +72,44 @@ var menu = new Howl({
     loop: true
 })
 
-//FLOW
-function next(){
-    console.log('current phase',phase)
-    if(phase == "char"){
-        stageMenu();
-        return
-    }
-    if(phase == "stage"){
-        tote();
-        return
-    }
-}
-
-function back(){
-    if(phase = "char"){
-        mainMenu();
-    }
-    if(phase = "stage"){
-        charMenu();
-    }
-}
-
-function boot(){
-    phase = "boot";
-    frame(
-        "boot","","logo","",
-        `<img src="public/bwlogosmol.png" alt="miladystation">`
-    )
-    get('bar').style.display = "none";
-    welcome();
-}
-
-function start(loud){
-    phase = "start"
-    if(loud){
-        hear = true;
-        menu.play();
-    }
-    frame("","","intro","container",
-        create("h1","title","fight","","POWER PACKS ONCHAINED")
-        +
-        create(
-            "button","start","float centered-button","auth()","START"
-        )
-        +
-        `<img src="./public/dogpile.png" id="dogpile" />`
-    )
-    get('bar').style.display = "none";
-    panUp(1.3)
-}
-
-function auth(){
-    phase = "auth"
-    frame("","","","container",
-        create(
-            "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet (jk)"
-        )
-    )
-    get('bar').style.display = "none";
-}
-
 function mainMenu(){
     phase = "main"
-    frame("","inside","option","option",
-        create("ul","","list","",
-            create("li","","option","",
-                create("button","","float","soloFlow()","Campaign")
-            )
-            +
-            create("li","","option","",
-                create("button","multi","float","multiFlow()","Create Multiplayer Game")
-            )
-            +
-            create("li","","option","",
-                create("button","join","float","joinFlow()","Join Multiplayer Game")
+    if(walletPacks.length > 0){
+        frame("","inside","option","option",
+            create("ul","","list","",
+                create("li","","option","",
+                    create("button","","float","charMenu()","Campaign")
+                )
+                +
+                create("li","","option","",
+                    create("button","multi","float","multiFlow()","Create Multiplayer Game")
+                )
+                +
+                create("li","","option","",
+                    create("button","join","float","joinFlow()","Join Multiplayer Game")
+                )
             )
         )
-    )
-    get("multi").disabled = true;
-    get("join").disabled = true;
+        get("multi").disabled = true;
+        get("join").disabled = true;
+    } else {
+        frame("","inside","option","option",
+            create("p","","","","We don't see any packs in your wallet, you need to register your packs to fight. Please switch to ethereum mainnet and click register")
+            +
+            create("ul","","list","",
+                create("li","","option","",
+                    create("button","","float","register()","Register")
+                )
+                +
+                create("li","","option","",
+                    create("button","","float","charMenu()","Play Offline")    
+                )
+            )
+        )
+    }
 }
 
 // solo
-function soloFlow(){
-    charMenu();
-}
 
 function charMenu(){
     phase = "char"
@@ -166,23 +133,14 @@ function charMenu(){
         +
         create("div","param","","",
             create("div","","dial","",
-                create("p","odds","","","")
+                create("p","odds","","","STOCKS: 3")
                 +
                 create("button","risk-less","ctrl","risk(0)","-")
                 +
                 create("button","risk-more","ctrl","risk(1)","+")
             )
-            +
-            create("div","","dial","",
-                create("p","wager","","",``)
-                +
-                create("button","bet-less","ctrl","bet(0)","-")
-                +
-                create("button","bet-more","ctrl","bet(1)","+")
-            )
         )
     )
-    get('bet-less').disabled = true;
     checkChain("play",0);
 }
 
@@ -207,7 +165,7 @@ function tote() {
         +
         create("button","fight","","battle()","FIGHT")
         +
-        create("button","check","","stageMenu()","wait")
+        create("button","check","","charMenu()","wait")
     )
 }
 
@@ -216,20 +174,28 @@ function battle() {
     //     menu.stop()
     //     sound.play()
     // }
-    if(table < getBet()){
-        fund(getBet()-table);
-    }
+    round = 0;
+    checkChain("fight");
+    game.p1.stock = stocks;
+    game.p2.stock = stocks;
     frame("","","match","",
-        create("div","","","",
+        create("div","action","","",
             `${action()}`
         )
     )
     countDown()
+    fight()
+}
+
+function fight() {
     setTimeout(()=>{
         battle1();
     },4000)
-    
-    checkChain("fight",0);
+    // for(let i = 0; i < stocks*2 && game.p1.stock > 0 && game.p2.stock > 0; i++){
+    //     setTimeout(()=>{
+    //         battle1();
+    //     },4000*(i+2))
+    // }
 }
 
 function action() {
@@ -241,9 +207,27 @@ function action() {
             `<img src="public/char/${character}.png" alt="char0" id="player1" />`
             +
             `<img src="public/char/${character1}.png" alt="char1" id="player2" />`
+            +
+            getStocks()
         )
         
     return game
+}
+
+function getStocks() {
+    let p1s = `<div class="stocks stock0">`
+    let p2s = `<div class="stocks stock1">`
+    for(let i = 0; i < stocks; i++){
+        if(game.p1.stock > i){
+            p1s += `<img src="public/char/${character}.png" alt="stock0" id="0stock${i+1}" class="stock0"/>`;
+        }
+        if(game.p2.stock > i){
+            p2s += `<img src="public/char/${character1}.png" alt="stock1" id="1stock1${i+1}" class="stock1"/>`;
+        }
+    }
+    p1s += "</div>"
+    p2s += "</div>"
+    return p1s + p2s;
 }
 
 function result() {
@@ -252,12 +236,18 @@ function result() {
     //     menu.play()
     // }
     clearInterval(curInt);
-    if(win > 0){
-        victory(getPrize());
-    } else if(win < 0){
-        defeat(table);
+    if(game.p1.stock > 0){
+        victory();
+    } else if(game.p2.stock > 0){
+        defeat();
     }
+    resetField();
     gloat();
+}
+
+function resetField() {
+    game.p1.stock = stocks;
+    game.p2.stock = stocks;
 }
 
 function gloat() {
@@ -361,23 +351,13 @@ function banner() {
     document.body.innerHTML += 
     create("div","banner","ribbon","",
         create("button","banner-min","tiny",`minimize('banner')`,"-")
-        +
-        create("h2","sum","","",`${getBet()} $DMT at ${getRisk()} odds for ${getPrize()} $DMT`)
+        //+
+        // create("h2","sum","","",`${getBet()} $DMT at ${getRisk()} odds for ${getPrize()} $DMT`)
         +
         create("button","next","","next()","READY")
     );
     bannerSlide('banner');
     get('disc').style.opacity = ".33";
-}
-
-function getBet() {
-    return (wager*betMulti).toPrecision(2);
-}
-function getRisk() {
-    return (odds-0.1*riskMulti).toPrecision(2);
-}
-function getPrize() {
-    return ((getBet() / getRisk()) - getBet()).toPrecision(4);
 }
 
 function minimize(target) {
@@ -389,48 +369,26 @@ function minimize(target) {
     get('banner').style.padding = "0%";
 }
 
-bet = (w) => {
-    if(w > 0){
-        betMulti++
-    } else {
-        betMulti--
-    }
-    get("wager").innerHTML = "wager: " + `${getBet()} $DMT`;
-    if(betMulti > 1){
-        get('bet-less').disabled = false;
-    } else {
-        get('bet-less').disabled = true;
-    }
-
-    if(betMulti > multiMax){
-    get('bet-more').disabled = true;
-    }
-    bannerUpdate()
-}
 
 risk = (w) => {
     if(w > 0){
-        riskMulti++
+        stocks++
     } else {
-        riskMulti--
+        stocks--
     }
-    get("odds").innerHTML = "odds: " + `${getRisk()}`;
-    if(riskMulti > -4){
-        get('risk-less').disabled = false;
-    } else {
+    get("odds").innerHTML = "STOCKS: " + `${stocks}`;
+    if(stocks < 2){
         get('risk-less').disabled = true;
+    } else {
+        get('risk-less').disabled = false;
     }
 
-    if(riskMulti > 3){
+    if(stocks > 4){
     get('risk-more').disabled = true;
     } else {
         get('risk-more').disabled = false;
     }
-    bannerUpdate()
-}
-
-function bannerUpdate() {
-    get('sum').innerHTML = `${getBet()} $DMT at ${getRisk()} odds for ${getPrize()} $DMT`
+    //bannerUpdate()
 }
 
 stats = async (charSelId) => {
@@ -439,12 +397,7 @@ stats = async (charSelId) => {
 
 function summary() {
     sum = 
-    create("h4","bet","","",`You are wagering ${getBet()} $DMT`)
-    +
-    create("h4","risk","","",`You are playing with ${getRisk()} odds`)
-    +
-    create("h4","prize","","",`You will recieve ${getPrize()} $DMT if you win`)
-    +
+    
     create("h3","q","","","Are you ready to fight?")
 
     return sum
@@ -453,11 +406,10 @@ function summary() {
 
                     
 //full spread
-boot();
+//boot();
 //start()
-//auth()
+auth()
 //mainMenu();
-//soloFlow();
 //charMenu();
 //banner();
 //tote();

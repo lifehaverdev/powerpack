@@ -1,6 +1,8 @@
 //drag drop
 var position = { x: 0, y: 0 }
 
+aniTimeout = [];
+
 interact('.draggable').draggable({
   listeners: {
     start (event) {
@@ -131,7 +133,25 @@ function countSlide(id) {
   }, 100);
 }
 
+function spawnSlide(id,right) {
+  el = get(id);
+  // Set the initial position (top: 0%) before the animation starts
+  el.style.top = '0%';
+  // Use a setTimeout to apply the transformation after a brief delay
+  setTimeout(() => {
+    if(right == 0){
+      el.style.left = '20%'; /* Move to 20% from the left */
+    } else if (right == 1){
+      el.style.right = '20%'; /* Move to 20% from the left */
+    }
+    el.style.top = '45%'; /* Move to 45% from the top */
+  }, 1000);
+}
+
 function countDown() {
+  spawnSlide('player1',0);
+  spawnSlide('player2',1);
+
   document.body.innerHTML += 
   create("h1","count","fight","","3");
   countSlide("count");
@@ -159,10 +179,7 @@ function countDown() {
   setTimeout(() => {
     get('count').remove()
   },4000)
-
 }
-
-
 
 function battle1() {
   var p1 = get('player1');
@@ -175,28 +192,43 @@ function battle1() {
     hit(p2);
     setTimeout(() => {hit(p1)},1500);
   },3000)
+  setTimeout(function () {
+    if(score.length > 0){
+      smash();
+    } else {
+      setTimeout(function () {
+        if(score.length > 0){
+          smash()
+        } else {
+          console.log('some ting wong')
+        }
+      },5000)
+    }
+  },5000)
 }
 
-// function battle2() {
-//   curInt = setInterval(()=>{
-//     smash();
-//   }, 1000)
-// }
-
-function smash() {
+smash = () => {
+  clearInterval(curInt);
   var p1 = get('player1');
   var p2 = get('player2');
     // Apply a CSS class to initiate the animation
     p1.classList.add('smashR');
     p2.classList.add('smashL');
-    if(win == 1){
+    console.log('smash score',score[round])
+    if(score[round]){
       knockOff(p2,1);
-    } else if(win == -1){
+    } else if(!score[round]){
       knockOff(p1,0);
     } else {
       knockOff(p1,0);
       knockOff(p2,1);
     }
+    p1.classList.remove('smashR');
+    p2.classList.remove('smashL');
+    if(game.p1.stock > 0 && game.p2.stock > 0){
+      battle1();
+    }
+    round++;
 }
 
 function hit(el) {
@@ -228,15 +260,25 @@ function knockOff(el,right) {
   // Apply a CSS class to initiate the animation
   if(right == 0){
     el.classList.add('knock-off-left');
+    game.p1.stock -= 1;
   } else {
-    el.classList.add('knock-off-right')
+    el.classList.add('knock-off-right');
+    game.p2.stock -= 1;
   }
-  
-  
   // Remove the element from the DOM after the animation ends
   el.addEventListener('animationend', () => {
-    el.remove();
+    //el.remove();
+    get('action').innerHTML = action();
+    if(right == 0){
+      spawnSlide('player1',right);
+    } else {
+      spawnSlide('player2',right);
+    }
   });
+  if(game.p1.stock == 0 || game.p1.stock == 0){
+    document.body.innerHTML += 
+    create("button","result","","result()","FIN");
+  }
 }
 
 function panUp(zoomFactor) {

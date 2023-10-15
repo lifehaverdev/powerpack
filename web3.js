@@ -1,40 +1,33 @@
-var playerWallet = 50 //dmt
-var purse = 50 //dmt
-var table = 0;
-const safety = 8
+//var playerWallet = 50 //dmt
+//var purse = 50 //dmt
+//var table = 0;
+//const safety = 8
 
 function fund(amt) {
-    fakeTransaction(`youre gonna pay ${amt} $DMT to the table so you can play`);
-    amt = parseFloat(amt);
-    playerWallet = playerWallet - amt;
-    purse = purse + amt;
-    table = table + amt;
+    fakeTransaction(`pls pay ${amt} ETH to play`);
+    //amt = parseFloat(amt);
+    // playerWallet = playerWallet - amt;
+    // purse = purse + amt;
+    // table = table + amt;
     updateBar();
 }
 
 function defeat() {
-    //purse = purse + parseFloat(getBet());
-    table = table - parseFloat(getBet());
+    //table = table - parseFloat(getBet());
+    win = -1;
     updateBar();
 }
 
-function victory(bet) {
-    bet = parseFloat(bet);
-    table = table + bet;
+function victory() {
+    //bet = parseFloat(bet);
+    //table = table + bet;
+    streak++;
+    win = 1;
     addExp(character);
     updateBar()
 }
 
-function collect() {
-    fakeTransaction(`you are collecting ${table} $DMT to your personal wallet`);
-    table = parseFloat(table);
-    playerWallet = playerWallet + table;
-    purse = purse - table;
-    table = 0;
-    updateBar();
-}
-//
-walletConnect = () => {
+walletConnect = async () => {
     const butt = get("wallet-ask");
     butt.innerHTML = 
         `<img src="public/loading.gif" alt="loading.."/>`
@@ -46,6 +39,7 @@ walletConnect = () => {
     // while(thinking){
     //     //stay here
     // }
+    walletPacks = await checkChain("checkPacks");
     mainMenu();
 }
 
@@ -54,7 +48,13 @@ fakeTransaction = (w) => {
 }
 
 writeChain = async(w) => {
-    return ""
+    if(w=="fight"){
+        fakeTransaction('you are now sending an amount of eth on arb to pay for the vrf');
+        score = vrf(stocks*2);
+        // if(hear){
+        //     sound.stop()
+        // }
+    }
 }
 
 
@@ -82,38 +82,30 @@ checkChain = async(w,i) => {
     if(w == "play"){
         setTimeout(function() {
             console.log("chainchecked");
-            get("odds").innerHTML = "odds: " + `${getRisk()}`;
-            get("wager").innerHTML = "wager: " + `${getBet()} $DMT`;
+            //get("odds").innerHTML = "odds: " + `${getRisk()}`;
+            //get("wager").innerHTML = "wager: " + `${getBet()} $DMT`;
         })
     }
-    if(w=="fight"){
-        setTimeout(function () {
-            console.log("vrf");
-            if(hear){
-                sound.stop()
-            }
-            if(vrf()){
-                win = 1;
-            } else {
-                win = -1;
-            }
-            document.body.innerHTML += 
-                create("button","result","","result()","FIN");
-            clearInterval(curInt);
-            smash();
-        },15000)
+    if(w == "checkPacks"){
+        //return [171,2,4];
+        return [];
     }
 }
 
-function vrf() {
-    
+function vrf(num) {
+    //console.log(score,'inside vrf');
+    let ran = [];
+    for(let i = 0; i < num; i++){
         // Generate a random number between 0 and 1
-        const random = Math.random();
-        console.log(random);
+        var random = Math.random();
+        // console.log(random);
         // If the random number is less than 0.5, consider it heads (true)
         // Otherwise, consider it tails (false)
-        return random < parseFloat(getRisk());
-    
+        ran.push(random < parseFloat(.5));
+    }
+    // console.log('score',score)
+    random = ran;
+    return ran;
 }
 
 function simRf(odd) {

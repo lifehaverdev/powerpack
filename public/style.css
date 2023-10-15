@@ -76,6 +76,7 @@ html, body {
 
 .stage {
     background-color: gray;
+    height: 90%;
     margin: 0%;
     padding: 0%;
     align-self: center;
@@ -358,6 +359,7 @@ html, body {
 #next {
     height: 100%;
     width: 30vw;
+    margin-left: auto;
 }
 
 #bar {
@@ -379,6 +381,7 @@ html, body {
 
 #wallet {
     color: green;
+    margin-top: 1%;
 }
 
 #table {
@@ -400,4 +403,35 @@ html, body {
 
 #cash-out {
     margin-left: auto;
+}
+
+#close-settings {
+    margin-left: auto;
+    display: none;
+}
+
+.stocks {
+    height: 4%;
+    position: absolute;
+}
+
+.stocks img {
+    height: 100%;
+}
+
+.stock0 {
+    left:0%;
+}
+
+.stock1 {
+    right:0%;
+}
+
+#settings {
+    position: absolute;
+    right: 0%;
+    top: 5%;
+    z-index: 4;
+    background-color: lightcyan;
+    padding: 5%;
 }
