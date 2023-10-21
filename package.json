@@ -1,0 +1,26 @@
+{
+  "name": "packbrawl",
+  "version": "1.0.0",
+  "description": "let them fight",
+  "main": "index.js",
+  "scripts": {
+    "test": "test",
+    "start": "http-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jfkwebdev/powerpack.git"
+  },
+  "keywords": [
+    "violence"
+  ],
+  "author": "arthurt",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/jfkwebdev/powerpack/issues"
+  },
+  "homepage": "https://github.com/jfkwebdev/powerpack#readme",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}
