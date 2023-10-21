@@ -1,7 +1,69 @@
-//var playerWallet = 50 //dmt
-//var purse = 50 //dmt
-//var table = 0;
-//const safety = 8
+/*
+
+ __ __ __   ______    _______   ______      
+/_//_//_/\ /_____/\ /_______/\ /_____/\     
+\:\\:\\:\ \\::::_\/_\::: _  \ \\:::_:\ \    
+ \:\\:\\:\ \\:\/___/\\::(_)  \/_  /_\:\ \   
+  \:\\:\\:\ \\::___\/_\::  _  \ \ \::_:\ \  
+   \:\\:\\:\ \\:\____/\\::(_)  \ \/___\:\ ' 
+    \_______\/ \_____\/ \_______\/\______/  
+                                            
+
+*/
+
+const web3 = new Web3(Web3.givenProvider); 
+var accounts = [];
+var team;
+var playerXP;
+//var friend;
+//var totalSup;
+//var connected = true;
+//var chainScanPre = 'https://etherscan.io/tx/'
+
+const masterABI = [{"inputs":[{"internalType":"address","name":"player1","type":"address"},{"internalType":"uint256","name":"character","type":"uint256"},{"internalType":"uint256","name":"stage","type":"uint256"},{"internalType":"uint256","name":"stock","type":"uint256"},{"internalType":"uint256","name":"reqId","type":"uint256"}],"name":"announce","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"p","type":"address"},{"internalType":"uint256","name":"c","type":"uint256"},{"internalType":"uint256","name":"s","type":"uint256"},{"internalType":"uint256","name":"st","type":"uint256"}],"name":"arm","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"game","type":"uint256"},{"internalType":"bool","name":"p0w","type":"bool"}],"name":"result","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newChance","type":"address"}],"name":"setChance","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"_newEXP","type":"address"}],"name":"setExp","outputs":[],"stateMutability":"nonpayable","type":"function"}]
+const expABI = [{"inputs":[{"internalType":"address","name":"id","type":"address"}],"name":"addPlayer","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"address","name":"id","type":"address"},{"internalType":"uint256","name":"char","type":"uint256"}],"name":"addValue","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[{"internalType":"uint256","name":"","type":"uint256"}],"name":"players","outputs":[{"internalType":"address","name":"","type":"address"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"id","type":"address"},{"internalType":"uint256","name":"char","type":"uint256"}],"name":"readExp","outputs":[{"internalType":"uint256","name":"exp","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"uint256","name":"","type":"uint256"}],"name":"rolo","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"},{"inputs":[{"internalType":"uint256","name":"_newWin","type":"uint256"}],"name":"setWin","outputs":[],"stateMutability":"nonpayable","type":"function"},{"inputs":[],"name":"win","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"stateMutability":"view","type":"function"}]
+const masterAdd = "0x1821BD18CBdD267CE4e389f893dDFe7BEB333aB6";
+const expAdd = "0x1821BD18CBdD267CE4e389f893dDFe7BEB333aB6";
+
+const master = new web3.eth.Contract(masterABI, masterAdd);
+const exp = new web3.eth.Contract(expABI, expAdd);
+
+connectWallet = async() => {
+    console.log('you clicked connect')
+    let connected = false;
+    try {
+        accounts = await web3.eth.requestAccounts().then()
+        connected = true;
+        console.log('we see this');
+    } catch(err) {
+        errorTell(err.message);
+    }   
+    if(connected){
+        //var connectbutt = document.getElementById('connectbutt-text');
+        //connectbutt.innerText = 'Connected';
+        
+        var networkId = await web3.eth.net.getId();
+        //console.log(networkId);
+        if (networkId !== 1) {
+        // Show an error message or take other appropriate action
+        alert('change your network to main ethereum')
+        }
+        checkWallet();
+    }
+}
+
+checkWallet = async() => {
+    team = await exp.registrar(accounts[0]).call()
+    console.log('team: ',team);
+}
+
+//function insertCoin() {}
+
+//function getProps() {}
+
+//function checkBack() {}
+
+////JAVASCRIPT FAKE WEB3
 
 function fund(amt) {
     fakeTransaction(`pls pay ${amt} ETH to play`);
@@ -27,7 +89,7 @@ function victory() {
     updateBar()
 }
 
-walletConnect = async () => {
+fakeConnectWallet = async () => {
     const butt = get("wallet-ask");
     butt.innerHTML = 
         `<img src="public/loading.gif" alt="loading.."/>`

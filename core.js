@@ -1,3 +1,16 @@
+/*
+
+ ______   ______   ______    ______      
+/_____/\ /_____/\ /_____/\  /_____/\     
+\:::__\/ \:::_ \ \\:::_ \ \ \::::_\/_    
+ \:\ \  __\:\ \ \ \\:(_) ) )_\:\/___/\   
+  \:\ \/_/\\:\ \ \ \\: __ `\ \\::___\/_  
+   \:\_\ \ \\:\_\ \ \\ \ `\ \ \\:\____/\ 
+    \_____\/ \_____\/ \_\/ \_\/ \_____\/ 
+                                         
+
+*/
+
 //FOUNDATIONAL
 function create(elem, id, clast, onclick, bod){
     return `<${elem} id="${id}" class="${clast}" onclick="${onclick}">${bod}</${elem}>`
@@ -68,8 +81,10 @@ function settings() {
         create("div","settings","","",
             create("p","","","","Menu")
             +
+            create("p","","","",`wallet: ${accounts[0]}`)
+            +
             create("p","","","",
-                `Your Packs: ${walletPacks}`
+                `Your Team: ${walletPacks}`
             )
         )
 }
@@ -183,8 +198,16 @@ function auth(){
     phase = "auth"
     frame("","","","container",
         create(
-            "button","wallet-ask","float centered-button web3","walletConnect()","connect-walet (jk)"
+            "button","wallet-ask","float centered-button web3","connectWallet()","connect-wallet"
+        )
+        +
+        create(
+            "button","wallet-ask","float centered-button web3","mainMenu()","play-offline"
         )
     )
     get('bar').style.display = "none";
+}
+
+function errorTell(msg) {
+    alert(msg);
 }

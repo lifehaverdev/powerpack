@@ -1,3 +1,17 @@
+/*
+
+ ________   ___   __     ________  ___ __ __   ______      
+/_______/\ /__/\ /__/\  /_______/\/__//_//_/\ /_____/\     
+\::: _  \ \\::\_\\  \ \ \__.::._\/\::\| \| \ \\::::_\/_    
+ \::(_)  \ \\:. `-\  \ \   \::\ \  \:.      \ \\:\/___/\   
+  \:: __  \ \\:. _    \ \  _\::\ \__\:.\-/\  \ \\::___\/_  
+   \:.\ \  \ \\. \`-\  \ \/__\::\__/\\. \  \  \ \\:\____/\ 
+    \__\/\__\/ \__\/ \__\/\________\/ \__\/ \__\/ \_____\/ 
+                                                           
+
+*/
+
+
 //drag drop
 var position = { x: 0, y: 0 }
 
@@ -13,8 +27,8 @@ var cadence = {
     tempo: 1000
   },
   hit: {
-    flicker: 500,
-    count: 1500
+    flicker: 400,
+    count: 800
   },
   battle1: {
     bell: 7000
@@ -133,7 +147,6 @@ function welcome() {
         )
         get('bar').style.display = "none";
     }, 2000);
-    
 }
 
 function bannerSlide(id) {
@@ -247,7 +260,7 @@ smash = () => {
 }
 
 function hit(el) {
-  console.log('hit')
+  //console.log('hit')
   let count = 0;
   const flickerInterval = setInterval(() => {
     if (count < 3) {
@@ -273,7 +286,7 @@ function hit(el) {
 }
 
 function knockOff(el,right) {
-  console.log('knockOff');
+  //console.log('knockOff');
   // Apply a CSS class to initiate the animation
   if(right == 0){
     el.classList.add('knock-off-left');
@@ -288,8 +301,10 @@ function knockOff(el,right) {
     if(game.p1.stock > 0 && game.p2.stock > 0){
       get('action').innerHTML = action();
       if(right == 0){
+        el.classList.remove('knock-off-left');
         spawnSlide('player1',right);
-      } else {
+      } else if (right == 1){
+        el.classList.remove('knock-off-right');
         spawnSlide('player2',right);
       }
     } else {
@@ -304,9 +319,11 @@ function knockOff(el,right) {
 
   setTimeout(()=>{
     if(game.p1.stock > 0 && game.p2.stock > 0){
-      battle1();
+      setTimeout(()=>{
+        battle1();
+      },cadence.fight.spawn)
+      
     }else{
-
       document.body.innerHTML += 
       create("button","result","","result()","FIN");
     }
