@@ -22,5 +22,8 @@
   "homepage": "https://github.com/jfkwebdev/powerpack#readme",
   "dependencies": {
     "http-server": "^14.1.1"
+  },
+  "devDependencies": {
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.9"
   }
 }

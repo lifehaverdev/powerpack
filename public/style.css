@@ -24,7 +24,7 @@ html, body {
 }
 
 .inside {
-    background-image: url("./bg.gif");
+    background-image: url("./assets/bg.gif");
 }
 
 /* Style the centered button */
@@ -66,7 +66,7 @@ html, body {
 
 .char {
     background-color: gray;
-    background-image: url("./electric-ball.gif");
+    background-image: url("./assets/electric-ball.gif");
     margin: 0%;
     padding: 0%;
     align-self: center;
@@ -160,26 +160,26 @@ html, body {
         height: 75px;
     }
     .char {
-        height: 100px;
-        width: 200px;
+        height: 85%;
+        width: 90%;
     }
     .stage {
-        height: 100px;
-        width: 200px;
+        height: 90%;
+        width: 90%;
     }
     .card {
-        height: 375px;
+        height: 40%;
         width: 300px;
     }
     .pp {
-        height: 200px;
+        height: 200%;
         width: 200px;
     }
     #player1, #player2 {
         top: 50%;
     }
     #chosen {
-        left: -10%;
+        left: 5%;
     }
 }
 
@@ -193,11 +193,11 @@ html, body {
     position: absolute;
     left: 15%;
     bottom: 3%;
-    background-image: url(./steel.png);
+    background-image: url(./assets/steel.png);
 }
 
 #chosen {
-    height: inherit;
+    height: 100%;
     align-self: center;
     position:relative
 }
@@ -236,6 +236,15 @@ html, body {
     background-color: pink;
 }
 
+#wait {
+    background-image: url('assets/code.gif');
+}
+
+.stage {
+    height: 90%;
+    width: 90%;
+}
+
 #wager {
     color: white;
 }
@@ -260,7 +269,7 @@ html, body {
     width: 100vw;
     height: 30vh;
     background-color: black;
-    background-image: url('./flames3.gif');
+    background-image: url('./assets/flames3.gif');
     display: flex;
 }
 
@@ -300,7 +309,7 @@ html, body {
 }
 
 .water {
-    background-image: url(./water028.gif)
+    background-image: url(./assets/water028.gif)
 }
 
 #dogpile {
@@ -310,7 +319,7 @@ html, body {
 }
 
 #intro {
-    background-image: url(./flames3.gif);
+    background-image: url(./assets/flames3.gif);
     height: 100vh;
     width: 100vw;
     overflow: hidden;
