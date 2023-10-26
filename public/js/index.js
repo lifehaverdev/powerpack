@@ -22,6 +22,7 @@
     var curInt;
     var walletPacks = [];
     var onChained = false;
+    var userXP;
     //betting
     var multiMax = 9;
     var odds = .5;
@@ -161,6 +162,7 @@ function stageMenu() {
 }
 
 function tote() {
+    phase = "tote";
     frame("","","option","",
         create("div","summary","float sheet","",
             `${summary()}`
@@ -173,6 +175,7 @@ function tote() {
 }
 
 function battle() {
+    phase = "battle";
     // if(hear){
     //     menu.stop()
     //     sound.play()
@@ -228,12 +231,12 @@ function action() {
 function getStocks() {
     let p1s = `<div class="stocks stock0">`
     let p2s = `<div class="stocks stock1">`
-    for(let i = 0; i < stocks; i++){
-        if(game.p1.stock > i){
-            p1s += `<img src="./char/${character}.png" alt="stock0" id="0stock${i+1}" class="stock0"/>`;
+    for(let i = 1; i < stocks + 1; i++){
+        if(game.p1.stock + 1 > i){
+            p1s += `<img src="./char/${character}.png" alt="stock0" id="0stock${i}" class="stock0"/>`;
         }
-        if(game.p2.stock > i){
-            p2s += `<img src="./char/${character1}.png" alt="stock1" id="1stock1${i+1}" class="stock1"/>`;
+        if(game.p2.stock + 1 > i){
+            p2s += `<img src="./char/${character1}.png" alt="stock1" id="1stock1${i}" class="stock1"/>`;
         }
     }
     p1s += "</div>"
@@ -242,6 +245,7 @@ function getStocks() {
 }
 
 function wait() {
+    phase = "wait";
     frame("","","wait","",
         create("div","","","",
             `<img src="assets/loading.gif"/>`
@@ -250,6 +254,7 @@ function wait() {
 }
 
 function result() {
+    phase = "result";
     // if(hear){
     //     sound.stop()
     //     menu.play()
@@ -267,6 +272,9 @@ function result() {
 function resetField() {
     game.p1.stock = stocks;
     game.p2.stock = stocks;
+    score = [];
+    a = false;
+    found = false;
 }
 
 function gloat() {
@@ -410,7 +418,9 @@ risk = (w) => {
 }
 
 stats = async (charSelId) => {
-        await checkChain("stats",charSelId);
+        //await checkChain("stats",charSelId);
+        xp = await checkExp(accounts[0],charSelId);
+        get('exp').innerHTML = `exp: ${xp}`;
 }
 
 function summary() {
@@ -422,9 +432,9 @@ function summary() {
 }
 
 //full spread
-//boot();
+boot();
 //start()
-auth()
+//auth()
 //mainMenu();
 //charMenu();
 //banner();

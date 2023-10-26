@@ -40,7 +40,7 @@ function frame(idO, clastO, idI, clastI, bod) {
                     create("button","vol","","soundSwitch()",`${volume()}`)
                     +
                     create("div","balance","","",
-                        create("h3","wallet","","",`WINS:${streak}`)
+                        create("h3","wallet","","",`WINS:${streak} EXP:${userXP}`)
                     )
                     +
                     create("button","cash-out","","settings()","Menu")
@@ -70,6 +70,9 @@ function frame(idO, clastO, idI, clastI, bod) {
             )
         )
     }
+    if(phase == "battle"){
+        get('back').disabled = true;
+    } 
     
 }
 
@@ -97,9 +100,15 @@ function hideSettings() {
 }
 
 
-function updateBar() {
-    if(!isMobileDevice()){
-        get('wallet').innerHTML = `WINS:${streak}`;
+updateBar = async() => {
+    let xp = userXP;
+    if(onChained && phase != "battle"){
+        xp = parseInt(await getUserExp());
+    }
+    console.log('xp in update bar',xp);
+    if(true){
+    //if(!isMobileDevice()){
+        get('wallet').innerHTML = `WINS:${streak} EXP: ${xp}`;
         get('vol').innerHTML = `${volume()}`;
     } else {
         get('wallet').innerHTML = `WINS:${streak}`;
@@ -169,7 +178,7 @@ function boot(){
     phase = "boot";
     frame(
         "boot","","logo","",
-        `<img src="./bwlogosmol.png" alt="miladystation">`
+        `<img src="./assets/bwlogosmol.png" alt="miladystation">`
     )
     get('bar').style.display = "none";
     welcome();
@@ -188,7 +197,7 @@ function start(loud){
             "button","start","float centered-button","auth()","START"
         )
         +
-        `<img src="dogpile.png" id="dogpile" />`
+        `<img src="./assets/dogpile.png" id="dogpile" />`
     )
     get('bar').style.display = "none";
     panUp(1.3)

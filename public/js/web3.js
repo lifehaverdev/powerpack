@@ -14,6 +14,7 @@ const web3 = new Web3(Web3.givenProvider);
 var accounts = [];
 var team;
 var playerXP;
+var found;
 //var friend;
 //var totalSup;
 //var connected = true;
@@ -57,6 +58,7 @@ connectWallet = async() => {
 checkWallet = async() => {
     walletPacks = await exp.methods.readRegistrar(accounts[0]).call()
     console.log('team: ',walletPacks);
+    await getUserExp();
     mainMenu();
 }
 
@@ -96,7 +98,7 @@ arm2 = async() => {
         const uint256Value = web3.utils.toBN(uint256Hex);
         var reqId = web3.utils.toBN(uint256Value); // Convert the data to a BigNumber
         reqId = reqId.toString();
-        console.log('reqId:', reqId.toString());
+        console.log('reqId:', reqId);
     } else {
         console.log('Event not found or no result.');
     }
@@ -105,22 +107,29 @@ arm2 = async() => {
 
 go = async(id) => {
     console.log('goin');
-    let a = false;
     let count = 0;
     wait();
     let checkInterval = setInterval(()=>{
-        console.log('when this has values we are gonna play the game');
-        if(checkGame(id)){
-            console.log('we got a live one');
+        console.log('check',count);
+        watch(id);
+        if(found) {
             clearInterval(checkInterval);
+            found = false;
             battle();
-        };
-        if(count > 10){
+        }
+        if(count > 20){
             clearInterval(checkInterval);
             mainMenu();
         }
         count++
-    },60000);
+    },5000);
+}
+
+watch = async(id) => {
+    if(await checkGame(id)){
+        console.log('we got a live one');
+        found = true;
+    };
 }
 
 checkGame = async(id) => {
@@ -130,12 +139,15 @@ checkGame = async(id) => {
     const idBN = web3.utils.toBN(id);
     try {
         game = (await master.methods.readSchedule(idBN).call());
-        console.log('game',game);
-        loadScore(game[5]);
         a = game[3];
     } catch (err) {
         console.log('checkGame error ',err);
     }
+    if(a) {
+        console.log('game in check game',game);
+        loadScore(game[5]);
+    }
+    console.log('a',a);
     return a;
 }
 
@@ -144,9 +156,42 @@ function loadScore(res) {
     for(let i = 0; i < score.length; i++){
         score[i] = res[i];
     }
+    console.log('score',score);
 }
 
+getUserExp = async() => {
+    let xp = 0;
+    for(let i = 0; i < 6; i++){
+        // console.log('wallet packs',walletPacks[i])
+        xp += parseInt(await checkExp(accounts[0],walletPacks[i]));
+    }
+    console.log('user exp', xp);
+    userXP = xp;
+    return xp;
+}
 
+checkExp = async(address,id) => {
+    let xp = 0;
+    try {
+        xp = await exp.methods.readExp(address,id).call();
+        // console.log('xp in checkExp',xp);
+    } catch (err) {
+        console.log(err);
+    }
+    return xp;
+}
+
+defeat = async() => {
+    //table = table - parseFloat(getBet());
+    win = -1;
+    await updateBar();
+}
+
+victory = async() => {
+    streak++;
+    win = 1;
+    await updateBar()
+}
 
 //function insertCoin() {}
 
@@ -154,41 +199,15 @@ function loadScore(res) {
 
 //function checkBack() {}
 
-////EVM method stuff
-
-mine = async() => {
-    helpers.mine();
-}
-
 ////JAVASCRIPT FAKE WEB3
 
-function fund(amt) {
+fund = async(amt) =>  {
     fakeTransaction(`pls pay ${amt} ETH to play`);
     //amt = parseFloat(amt);
     // playerWallet = playerWallet - amt;
     // purse = purse + amt;
     // table = table + amt;
-    updateBar();
-}
-
-function defeat() {
-    //table = table - parseFloat(getBet());
-    win = -1;
-    updateBar();
-}
-
-function victory() {
-    //bet = parseFloat(bet);
-    //table = table + bet;
-    streak++;
-    win = 1;
-    addExp(character);
-    // if(onChained){
-    //     try {
-    //         exp.methods.addValue()
-    //     }
-    // }
-    updateBar()
+    await updateBar();
 }
 
 fakeConnectWallet = async () => {
@@ -253,15 +272,6 @@ checkChain = async(w,i) => {
     if(w == "checkPacks"){
         //return [171,2,4];
         return [];
-    }
-}
-
-checkExp = async(address,id) => {
-    let xp = 0;
-    try {
-        xp = await exp.methods.readExp(address,id).call();
-    } catch (err) {
-        console.log(err);
     }
 }
 
