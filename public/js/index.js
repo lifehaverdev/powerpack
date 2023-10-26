@@ -34,32 +34,33 @@
     var random = [];
     var score = [];
     var round;
+    var game = {
+        p1: {
+            stock: 0
+        },
+        p2: {
+            stock: 0
+        }
+    }
 
 //working
 
-var game = {
-    p1: {
-        stock: 0
-    },
-    p2: {
-        stock: 0
+    var level = 0;
+    var xp2next = 0;
+    getLevel = async() => {
+        if(onChained){
+            console.log('current exp', userXP);
+            level = Math.floor(Math.cbrt(userXP));
+            xp2next = (cube(level + 1))-userXP;
+            console.log('level',level);
+            console.log('xp to next level: ', xp2next);
+        } else {
+            console.log('get Onchained to level up!')
+        }
     }
-}
-
-function addExp(packId) {
-    if(userExp[packId]){
-        //console.log('pack found');
-        userExp[packId] += 50 * (.5 / odds) ;
-    } else {
-        //console.log('fresh pack');
-        userExp[packId] = 50 * (.5 / odds ) ;
+    cube = (n) => {
+        return n*n*n;
     }
-    console.log(userExp)
-}
-
-function calculatePrize() {
-    prize = wager * ((1-odds) / .5) * ((1 - odds) / .5);
-}
 
 //sound
 

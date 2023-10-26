@@ -110,7 +110,6 @@ go = async(id) => {
     let count = 0;
     wait();
     let checkInterval = setInterval(()=>{
-        console.log('check',count);
         watch(id);
         if(found) {
             clearInterval(checkInterval);
@@ -133,7 +132,6 @@ watch = async(id) => {
 }
 
 checkGame = async(id) => {
-    console.log('checking game');
     let a = false;
     let game;
     const idBN = web3.utils.toBN(id);
@@ -144,10 +142,8 @@ checkGame = async(id) => {
         console.log('checkGame error ',err);
     }
     if(a) {
-        console.log('game in check game',game);
         loadScore(game[5]);
     }
-    console.log('a',a);
     return a;
 }
 

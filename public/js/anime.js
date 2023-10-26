@@ -309,9 +309,9 @@ function knockOff(el,right) {
       }
     } else {
       if(game.p1.stock == 0){
-        document.getElementsById('0stock11').style.display = 'none'
+        document.getElementsById('stock0').style.display = 'none'
       }else if(game.p2.stock == 0){
-        document.getElementsById('1stock11').style.display = 'none'
+        document.getElementsById('stock1').style.display = 'none'
       }
     }
     
